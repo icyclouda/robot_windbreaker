@@ -1,0 +1,385 @@
+{
+  "uuid": "99548c6e4c183ddd7a54d253056ec3b4",
+  "path": "Offline/RM%E7%A0%B4%E9%A3%8E%E4%B8%BB%E9%A9%B1",
+  "name": "RM破风主驱",
+  "content": "",
+  "created_at": "2023-04-12 23:36:28",
+  "updated_at": "2023-04-28 22:44:44",
+  "stick": "",
+  "documents": [
+    {
+      "uuid": "7c3962824423b35b383cdc2d82d468fd",
+      "title": "RM破风主驱tb6612原理图",
+      "description": "",
+      "docType": "1",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "4cc4f74692ef47d8a13458c7a20fd2ed": 2,
+        "93722a822c5e492ebff70f8f61ba4676": 4,
+        "b82150387a2041b4afd55b90c79c5923": 2,
+        "ed9eb2faffb34286820a54a14e9e9e24": 8,
+        "a11d8f638c3b4c9ca5f0028af4829989": 1,
+        "dd083e9a2e7e40b89ba5926c234d5d47": 1,
+        "4c2b5fc3585443078569c85b8565df06": 2,
+        "c58e33efcd08c9c01df888e6a177ba93": 4,
+        "ca91f8a03d524fe7b6ec0424fd2e73e7": 1,
+        "874040056c2a4a1faae2c3e185dd2546": 1,
+        "bb1c8a4d62704684b2e64eadcd6846ea": 1,
+        "08e3a8ff86540b22543ded126aaa1f34": 1,
+        "24cb9676b0122d10d54992fff4f2526e": 1,
+        "07864993ba7040eaa7be0a613d049974": 1,
+        "a8fbbcad71904b7fb3eda2049825a451": 1,
+        "4b1517ca98054367880835568538cc59": 1,
+        "afa7897d2a6f44619082a44561bd3d3b": 1,
+        "f6c3c389e37e5c13c836322588d46ea6": 1,
+        "54a0e81b55964c388b15a93573b0428f": 3,
+        "55b2ff2ca7394c09b886409a8916260c": 1
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "100nF",
+          4,
+          "C0805",
+          "C1,C4,C6,C8",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer Part": "CL21B104KBCNNNC",
+            "BOM_Manufacturer": "SAMSUNG(三星)",
+            "BOM_Supplier Part": "C1711",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "c58e33efcd08c9c01df888e6a177ba93"
+          }
+        ],
+        [
+          "20pF",
+          1,
+          "C0805",
+          "C2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "YAGEO(国巨)",
+            "BOM_Manufacturer Part": "CC0805JRNPO9BN200",
+            "BOM_Supplier Part": "C105173",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "07864993ba7040eaa7be0a613d049974"
+          }
+        ],
+        [
+          "100uF/25v",
+          2,
+          "CAP-TH_BD6.3-P2.50-D1.0-FD",
+          "C3,C5",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C311685",
+            "BOM_Manufacturer": "lelon(立隆)",
+            "BOM_Manufacturer Part": "RGA101M1ESA-0611G",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "1a9b494b74c34d3b879eb7f824b3824d",
+            "uuid": "4c2b5fc3585443078569c85b8565df06"
+          }
+        ],
+        [
+          "10uF",
+          1,
+          "C0805",
+          "C7",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C440198",
+            "BOM_Manufacturer": "muRata(村田)",
+            "BOM_Manufacturer Part": "GRM21BR61H106KE43L",
+            "BOM_JLCPCB Part Class": "Basic Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "4b1517ca98054367880835568538cc59"
+          }
+        ],
+        [
+          "100nf",
+          2,
+          "C0805",
+          "C9,C10",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "RS3MBF",
+          1,
+          "SMBF_L4.3-W3.6-LS5.3-RD",
+          "D1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "晶导微电子",
+            "BOM_Manufacturer Part": "RS3MBF",
+            "BOM_Supplier Part": "C123924",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "8605095a193841eca484eb0032d5352b",
+            "uuid": "dd083e9a2e7e40b89ba5926c234d5d47"
+          }
+        ],
+        [
+          "LED",
+          1,
+          "LED0805-R-RD",
+          "D2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "国星光电",
+            "BOM_Manufacturer Part": "NCD0805B2",
+            "BOM_Supplier Part": "C84259",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "82605a93a0be4c79a27d82f67f2aca29",
+            "uuid": "f6c3c389e37e5c13c836322588d46ea6"
+          }
+        ],
+        [
+          "2.2uH",
+          1,
+          "IND-SMD_L6.0-W6.0",
+          "L1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C1332316",
+            "BOM_Manufacturer": "BOURNS",
+            "BOM_Manufacturer Part": "SRN6045TA-2R2Y",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "081987c20f3844668e2fec74b142996f",
+            "uuid": "bb1c8a4d62704684b2e64eadcd6846ea"
+          }
+        ],
+        [
+          "XT60",
+          3,
+          "TX60-LI-S",
+          "P1,P2,P3",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "82e3ceafdb7342c58fd6e8b1a6874e2c",
+            "uuid": "54a0e81b55964c388b15a93573b0428f"
+          }
+        ],
+        [
+          "100kΩ",
+          1,
+          "R0805",
+          "R1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "PANASONIC(松下)",
+            "BOM_Manufacturer Part": "ERJPB6B1003V",
+            "BOM_Supplier Part": "C161786",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "ca91f8a03d524fe7b6ec0424fd2e73e7"
+          }
+        ],
+        [
+          "40.2kΩ",
+          1,
+          "R0805",
+          "R2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "UNI-ROYAL(厚声)",
+            "BOM_Manufacturer Part": "0805W8F4022T5E",
+            "BOM_Supplier Part": "C17678",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "24cb9676b0122d10d54992fff4f2526e"
+          }
+        ],
+        [
+          "3K",
+          1,
+          "R0805",
+          "R3",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C204388",
+            "BOM_Manufacturer": "BOURNS",
+            "BOM_Manufacturer Part": "CR0805-FX-3001ELF",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "afa7897d2a6f44619082a44561bd3d3b"
+          }
+        ],
+        [
+          "5.1kΩ",
+          1,
+          "R0805",
+          "R4",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "UNI-ROYAL(厚声)",
+            "BOM_Manufacturer Part": "0805W8F5101T5E",
+            "BOM_Supplier Part": "C27834",
+            "BOM_JLCPCB Part Class": "Basic Part",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "08e3a8ff86540b22543ded126aaa1f34"
+          }
+        ],
+        [
+          "220R",
+          8,
+          "R0805",
+          "R5,R6,R7,R8,R9,R10,R11,R12",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "ed9eb2faffb34286820a54a14e9e9e24"
+          }
+        ],
+        [
+          "TMI3255",
+          1,
+          "PG-SOT23-6_L2.9-W1.6-P0.95-LS2.8-BR",
+          "U1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C840543",
+            "BOM_Manufacturer": "TMI(拓尔微)",
+            "BOM_Manufacturer Part": "TMI3255",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "89696afe31004e00abbd3761c9bfad66",
+            "uuid": "874040056c2a4a1faae2c3e185dd2546"
+          }
+        ],
+        [
+          "AMS1117-3.3RG",
+          1,
+          "SOT-223-3_L6.4-W3.5-P2.30-LS7.0-BR",
+          "U2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2977152",
+            "BOM_Manufacturer": "HGC(深圳汉芯)",
+            "BOM_Manufacturer Part": "AMS1117-3.3RG",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "923eff2110a24b44a521b4ab1cf3b7fe",
+            "uuid": "a8fbbcad71904b7fb3eda2049825a451"
+          }
+        ],
+        [
+          "TB6612FNG(O,C,8,EL",
+          2,
+          "SSOP-24_L8.4-W5.8-P0.65-LS7.8-BL",
+          "U3,U4",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "TOSHIBA(东芝)",
+            "BOM_Manufacturer Part": "TB6612FNG(O,C,8,EL",
+            "BOM_Supplier Part": "C88224",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "6fd45682c3374240a0303e7cad199b27",
+            "uuid": "4cc4f74692ef47d8a13458c7a20fd2ed"
+          }
+        ],
+        [
+          "SS12D06弯针",
+          1,
+          "SW-TH_3P-SS12D06-1",
+          "U5",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C9900027365",
+            "BOM_Manufacturer": "null",
+            "BOM_Manufacturer Part": "SS12D06弯针",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "0129f477903547f89d5cd1fd11c888b2",
+            "uuid": "55b2ff2ca7394c09b886409a8916260c"
+          }
+        ],
+        [
+          "X2026WV-2X13-N0SN",
+          1,
+          "IDC-TH_X9555WV-2X13A-PTV01",
+          "X8",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2764567",
+            "BOM_Manufacturer": "XKB Connectivity(中国星坤)",
+            "BOM_Manufacturer Part": "X2026WV-2X13-N0SN",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "babfbcf393fd4e809a41295479116fc3",
+            "uuid": "a11d8f638c3b4c9ca5f0028af4829989"
+          }
+        ],
+        [
+          "XH-6/2.50mm",
+          4,
+          "CONN-TH_XH-6A",
+          "XA,XB,XC,XD",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C722879",
+            "BOM_Manufacturer": "CAX(创都)",
+            "BOM_Manufacturer Part": "XH-6A",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "20fd2e72dc2047eb9e266e83785a7a88",
+            "uuid": "93722a822c5e492ebff70f8f61ba4676"
+          }
+        ]
+      ],
+      "updateTime": 1682692734,
+      "createTime": 1681313796,
+      "histories": [],
+      "created_at": "2023-04-12 23:36:36",
+      "updated_at": "2023-04-28 22:38:54"
+    },
+    {
+      "uuid": "d95f01ae86ce7528d3ac4cbcff1021ab",
+      "puuid": "99548c6e4c183ddd7a54d253056ec3b4",
+      "title": "RM破风主驱tb6612PCB",
+      "filename": "RM破风主驱tb6612PCB.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "20fd2e72dc2047eb9e266e83785a7a88": 4,
+        "babfbcf393fd4e809a41295479116fc3": 1,
+        "2ee8eb13a0124a108e622ce40c0c25a8": 8,
+        "1a9b494b74c34d3b879eb7f824b3824d": 2,
+        "8605095a193841eca484eb0032d5352b": 1,
+        "82605a93a0be4c79a27d82f67f2aca29": 1,
+        "081987c20f3844668e2fec74b142996f": 1,
+        "b60f399a7a7e41848b2be1eb49c79141": 12,
+        "923eff2110a24b44a521b4ab1cf3b7fe": 1,
+        "6fd45682c3374240a0303e7cad199b27": 2,
+        "82e3ceafdb7342c58fd6e8b1a6874e2c": 3,
+        "0129f477903547f89d5cd1fd11c888b2": 1,
+        "89696afe31004e00abbd3761c9bfad66": 1
+      },
+      "BOM": [],
+      "updateTime": 1682693084,
+      "createTime": 1681313788,
+      "histories": [],
+      "created_at": "2023-04-12 23:36:28",
+      "updated_at": "2023-04-28 22:44:44"
+    }
+  ],
+  "sort": [],
+  "title": "RM破风主驱",
+  "foldername": "RM破风主驱",
+  "schfilename": "RM破风主驱.json",
+  "schfilemtime": 1682693031378
+}

@@ -1,0 +1,300 @@
+{
+  "uuid": "25e60763a262da96b06fa7faf753402e",
+  "path": "Offline/RM校内赛遥控器ver3.0",
+  "name": "RM校内赛遥控器ver3.0",
+  "content": "",
+  "created_at": "2023-04-28 12:25:11",
+  "updated_at": "2023-04-28 22:26:02",
+  "stick": "",
+  "documents": [
+    {
+      "uuid": "56cdf3d9dc4fd206e0870dd194fc27be",
+      "title": "RM校内赛遥控器ver3.0原理图",
+      "description": "",
+      "docType": "1",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "8ff5a1593c1244d4bc92a849464d3bf7": 1,
+        "d5c462c1be1943a3942fab8c23d94244": 2,
+        "da9139e38831471287448295a1aa6ae1": 5,
+        "c726fd6fb5cd452cb08c931cecf9df17": 1,
+        "a9aa2b14f188405792fa87ac344499a4": 1,
+        "4c2b5fc3585443078569c85b8565df06": 1,
+        "afa7897d2a6f44619082a44561bd3d3b": 1,
+        "c58e33efcd08c9c01df888e6a177ba93": 2,
+        "4b1517ca98054367880835568538cc59": 1,
+        "a8fbbcad71904b7fb3eda2049825a451": 1,
+        "f6c3c389e37e5c13c836322588d46ea6": 1,
+        "845db5de81164b25916d9f4e46b3367f": 1,
+        "55b2ff2ca7394c09b886409a8916260c": 1,
+        "594a1ac150e6fa18038e6b23c08196e0": 3
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "100uF/25v",
+          1,
+          "CAP-TH_BD6.3-P2.50-D1.0-FD",
+          "C2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C311685",
+            "BOM_Manufacturer": "lelon(立隆)",
+            "BOM_Manufacturer Part": "RGA101M1ESA-0611G",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "1a9b494b74c34d3b879eb7f824b3824d",
+            "uuid": "4c2b5fc3585443078569c85b8565df06"
+          }
+        ],
+        [
+          "100nF",
+          2,
+          "C0805",
+          "C3,C5",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer Part": "CL21B104KBCNNNC",
+            "BOM_Manufacturer": "SAMSUNG(三星)",
+            "BOM_Supplier Part": "C1711",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "c58e33efcd08c9c01df888e6a177ba93"
+          }
+        ],
+        [
+          "10uF",
+          1,
+          "C0805",
+          "C4",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C440198",
+            "BOM_Manufacturer": "muRata(村田)",
+            "BOM_Manufacturer Part": "GRM21BR61H106KE43L",
+            "BOM_JLCPCB Part Class": "Basic Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "4b1517ca98054367880835568538cc59"
+          }
+        ],
+        [
+          "LED",
+          1,
+          "LED0805-R-RD",
+          "D2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "国星光电",
+            "BOM_Manufacturer Part": "NCD0805B2",
+            "BOM_Supplier Part": "C84259",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "82605a93a0be4c79a27d82f67f2aca29",
+            "uuid": "f6c3c389e37e5c13c836322588d46ea6"
+          }
+        ],
+        [
+          "HDR-M-2.54_1x2",
+          1,
+          "HDR-M-2.54_1X2",
+          "J2",
+          {
+            "BOM_Supplier Part": "C124375",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "70aa5812f21f4991bf427395d51849f4",
+            "uuid": "a9aa2b14f188405792fa87ac344499a4"
+          }
+        ],
+        [
+          "无线通讯接口",
+          1,
+          "WIRELM-SMD_AI_NRF24L01",
+          "P1",
+          {
+            "puuid": "dd4872f0dd1046f8aa6aba607b93b45c",
+            "uuid": ""
+          }
+        ],
+        [
+          "3K",
+          1,
+          "R0805",
+          "R2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C204388",
+            "BOM_Manufacturer": "BOURNS",
+            "BOM_Manufacturer Part": "CR0805-FX-3001ELF",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "afa7897d2a6f44619082a44561bd3d3b"
+          }
+        ],
+        [
+          "KSC201GLFS",
+          5,
+          "轻触开关12*12",
+          "SW0,SW1,SW2,SW3,SW4",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C221724",
+            "BOM_Manufacturer": "C&K",
+            "BOM_Manufacturer Part": "KSC201GLFS",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "6c7a753afde14693bab8862db277dcc7",
+            "uuid": "da9139e38831471287448295a1aa6ae1"
+          }
+        ],
+        [
+          "SMD Tactile Switch6*6*6mm",
+          3,
+          "SW-L6.0-W6.0DIP",
+          "SW5,SW6,SW7",
+          {
+            "BOM_Supplier Part": "C23873",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "null",
+            "BOM_Manufacturer Part": "贴片轻触开关6*6*6mm",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "ce66fb8b54944f09b328cf93f04fe313",
+            "uuid": "594a1ac150e6fa18038e6b23c08196e0"
+          }
+        ],
+        [
+          "STM32最小系统板",
+          1,
+          "STM32F103C8T6核心板",
+          "U1",
+          {
+            "BOM_Manufacturer Part": "",
+            "puuid": "d9dadaff30f14ab79c3489cc942bb05f",
+            "uuid": "8ff5a1593c1244d4bc92a849464d3bf7"
+          }
+        ],
+        [
+          "OLED 0.96OLED",
+          1,
+          "OLED4针1.3寸VER",
+          "U2",
+          {
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "puuid": "fb951d5aab1d4f0996b13b54e21b79ab",
+            "uuid": "c726fd6fb5cd452cb08c931cecf9df17"
+          }
+        ],
+        [
+          "AMS1117-3.3RG",
+          1,
+          "SOT-223-3_L6.4-W3.5-P2.30-LS7.0-BR",
+          "U5",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2977152",
+            "BOM_Manufacturer": "HGC(深圳汉芯)",
+            "BOM_Manufacturer Part": "AMS1117-3.3RG",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "923eff2110a24b44a521b4ab1cf3b7fe",
+            "uuid": "a8fbbcad71904b7fb3eda2049825a451"
+          }
+        ],
+        [
+          "T插",
+          1,
+          "T插",
+          "U6",
+          {
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "puuid": "c2340ad54d5f44c1b5238ea5e99b43cd",
+            "uuid": "845db5de81164b25916d9f4e46b3367f"
+          }
+        ],
+        [
+          "SS12D06弯针",
+          1,
+          "SW-TH_3P-SS12D06-1",
+          "U7",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C9900027365",
+            "BOM_Manufacturer": "null",
+            "BOM_Manufacturer Part": "SS12D06弯针",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "0129f477903547f89d5cd1fd11c888b2",
+            "uuid": "55b2ff2ca7394c09b886409a8916260c"
+          }
+        ],
+        [
+          "ps2摇杆模块ZXY",
+          2,
+          "XH-6-2.54",
+          "X1,X2",
+          {
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "puuid": "2f3ea79496de4dc6824a211ea0ddb554",
+            "uuid": "d5c462c1be1943a3942fab8c23d94244"
+          }
+        ]
+      ],
+      "updateTime": 1682691960,
+      "createTime": 1681562967,
+      "histories": [],
+      "created_at": "2023-04-15 20:49:27",
+      "updated_at": "2023-04-28 22:26:00"
+    },
+    {
+      "uuid": "c391f1c6fa7ebc0bf9c606f9ce979786",
+      "title": "RM校内赛遥控器ver3.0pcb",
+      "filename": "RM校内赛遥控器ver3.0pcb.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "1a9b494b74c34d3b879eb7f824b3824d": 1,
+        "c2340ad54d5f44c1b5238ea5e99b43cd": 1,
+        "70aa5812f21f4991bf427395d51849f4": 1,
+        "d9dadaff30f14ab79c3489cc942bb05f": 1,
+        "ce66fb8b54944f09b328cf93f04fe313": 3,
+        "2ee8eb13a0124a108e622ce40c0c25a8": 3,
+        "82605a93a0be4c79a27d82f67f2aca29": 1,
+        "b60f399a7a7e41848b2be1eb49c79141": 1,
+        "923eff2110a24b44a521b4ab1cf3b7fe": 1,
+        "0129f477903547f89d5cd1fd11c888b2": 1,
+        "2f3ea79496de4dc6824a211ea0ddb554": 2,
+        "fb951d5aab1d4f0996b13b54e21b79ab": 1,
+        "6c7a753afde14693bab8862db277dcc7": 5,
+        "dd4872f0dd1046f8aa6aba607b93b45c": 1
+      },
+      "BOM": [],
+      "updateTime": 1682691962,
+      "createTime": 1681563066,
+      "histories": [],
+      "created_at": "2023-04-15 20:51:06",
+      "updated_at": "2023-04-28 22:26:02"
+    }
+  ],
+  "sort": [
+    "5256c2a4b5bb5d0d9cf8ef5404cf4aba",
+    "56cdf3d9dc4fd206e0870dd194fc27be"
+  ],
+  "title": "RM校内赛遥控器ver3.0",
+  "foldername": "RM校内赛遥控器ver3.0",
+  "schfilename": "RM校内赛遥控器ver3.0.json",
+  "schfilemtime": 1682691960851
+}

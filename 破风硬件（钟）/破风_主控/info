@@ -1,0 +1,310 @@
+{
+  "uuid": "f71e9af3427dd53790b6c63d345ea215",
+  "path": "Offline/RM%E6%A0%A1%E5%86%85%E8%B5%9B%E7%A0%B4%E9%A3%8E%E4%B8%BB%E6%9D%BF",
+  "name": "RM校内赛破风主板",
+  "content": "",
+  "created_at": "2023-04-12 23:30:42",
+  "updated_at": "2023-04-28 22:50:02",
+  "stick": "",
+  "documents": [
+    {
+      "uuid": "e8e1d4c9c86911e88bd277c9c5ed4912",
+      "title": "RM校内赛破风主板原理图",
+      "description": "",
+      "docType": "1",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "a14f560f21f64fb5b487706b5e6cc964": 1,
+        "595f1b159cbb1fc2159315f85f2042a1": 1,
+        "c726fd6fb5cd452cb08c931cecf9df17": 1,
+        "a11d8f638c3b4c9ca5f0028af4829989": 1,
+        "a9aa2b14f188405792fa87ac344499a4": 1,
+        "54a0e81b55964c388b15a93573b0428f": 1,
+        "f6c3c389e37e5c13c836322588d46ea6": 1,
+        "c58e33efcd08c9c01df888e6a177ba93": 2,
+        "a8fbbcad71904b7fb3eda2049825a451": 1,
+        "4b1517ca98054367880835568538cc59": 1,
+        "afa7897d2a6f44619082a44561bd3d3b": 1,
+        "4c2b5fc3585443078569c85b8565df06": 1,
+        "55b2ff2ca7394c09b886409a8916260c": 1,
+        "b748c9597957c20e30840020c699c4a2": 2
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "100uF/25v",
+          1,
+          "CAP-TH_BD6.3-P2.50-D1.0-FD",
+          "C2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C311685",
+            "BOM_Manufacturer": "lelon(立隆)",
+            "BOM_Manufacturer Part": "RGA101M1ESA-0611G",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "1a9b494b74c34d3b879eb7f824b3824d",
+            "uuid": "4c2b5fc3585443078569c85b8565df06"
+          }
+        ],
+        [
+          "100nF",
+          2,
+          "C0805",
+          "C3,C5",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer Part": "CL21B104KBCNNNC",
+            "BOM_Manufacturer": "SAMSUNG(三星)",
+            "BOM_Supplier Part": "C1711",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "c58e33efcd08c9c01df888e6a177ba93"
+          }
+        ],
+        [
+          "10uF",
+          1,
+          "C0805",
+          "C4",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C440198",
+            "BOM_Manufacturer": "muRata(村田)",
+            "BOM_Manufacturer Part": "GRM21BR61H106KE43L",
+            "BOM_JLCPCB Part Class": "Basic Part",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "4b1517ca98054367880835568538cc59"
+          }
+        ],
+        [
+          "LED",
+          1,
+          "LED0805-R-RD",
+          "D2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "国星光电",
+            "BOM_Manufacturer Part": "NCD0805B2",
+            "BOM_Supplier Part": "C84259",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "82605a93a0be4c79a27d82f67f2aca29",
+            "uuid": "f6c3c389e37e5c13c836322588d46ea6"
+          }
+        ],
+        [
+          "HDR-M-2.54_1x2",
+          1,
+          "HDR-M-2.54_1X2",
+          "J1",
+          {
+            "BOM_Supplier Part": "C124375",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "70aa5812f21f4991bf427395d51849f4",
+            "uuid": "a9aa2b14f188405792fa87ac344499a4"
+          }
+        ],
+        [
+          "NRF24L01",
+          1,
+          "WIRELM-SMD_AI_NRF24L01",
+          "MK1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "Ai-Thinker(安信可)",
+            "BOM_Manufacturer Part": "NF-04",
+            "BOM_Supplier Part": "C90751",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "dd4872f0dd1046f8aa6aba607b93b45c",
+            "uuid": "595f1b159cbb1fc2159315f85f2042a1"
+          }
+        ],
+        [
+          "XT60",
+          1,
+          "TX60-LI-S",
+          "P1",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "82e3ceafdb7342c58fd6e8b1a6874e2c",
+            "uuid": "54a0e81b55964c388b15a93573b0428f"
+          }
+        ],
+        [
+          "HDR-IDC-2.54-2X4P",
+          2,
+          "IDC-TH_8P-P2.54-V-R2-C4-S2.54",
+          "P2,P3",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "BOOMELE",
+            "BOM_Manufacturer Part": "IDC Box 2X4 2.54MM",
+            "BOM_Supplier Part": "C9135",
+            "puuid": "7ceb41e9f586431dab7915fe4bf8eef6",
+            "uuid": "b748c9597957c20e30840020c699c4a2"
+          }
+        ],
+        [
+          "3K",
+          1,
+          "R0805",
+          "R2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C204388",
+            "BOM_Manufacturer": "BOURNS",
+            "BOM_Manufacturer Part": "CR0805-FX-3001ELF",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "afa7897d2a6f44619082a44561bd3d3b"
+          }
+        ],
+        [
+          "stm32f407v最小",
+          1,
+          "STM32F407VET6最小系统",
+          "U1",
+          {
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "puuid": "af56006967ec4e3ab0ab406d3f7325da",
+            "uuid": "a14f560f21f64fb5b487706b5e6cc964"
+          }
+        ],
+        [
+          "OLED 0.96OLED",
+          1,
+          "OLED10.96OLED",
+          "U2",
+          {
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "puuid": "5b14ce7d551c458c82ba9f299dd09cfb",
+            "uuid": "c726fd6fb5cd452cb08c931cecf9df17"
+          }
+        ],
+        [
+          "AMS1117-3.3RG",
+          1,
+          "SOT-223-3_L6.4-W3.5-P2.30-LS7.0-BR",
+          "U4",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2977152",
+            "BOM_Manufacturer": "HGC(深圳汉芯)",
+            "BOM_Manufacturer Part": "AMS1117-3.3RG",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "923eff2110a24b44a521b4ab1cf3b7fe",
+            "uuid": "a8fbbcad71904b7fb3eda2049825a451"
+          }
+        ],
+        [
+          "SS12D06弯针",
+          1,
+          "SW-TH_3P-SS12D06-1",
+          "U5",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C9900027365",
+            "BOM_Manufacturer": "null",
+            "BOM_Manufacturer Part": "SS12D06弯针",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "0129f477903547f89d5cd1fd11c888b2",
+            "uuid": "55b2ff2ca7394c09b886409a8916260c"
+          }
+        ],
+        [
+          "X2026WV-2X13-N0SN",
+          1,
+          "IDC-TH_X9555WV-2X13A-PTV01",
+          "X8",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C2764567",
+            "BOM_Manufacturer": "XKB Connectivity(中国星坤)",
+            "BOM_Manufacturer Part": "X2026WV-2X13-N0SN",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "babfbcf393fd4e809a41295479116fc3",
+            "uuid": "a11d8f638c3b4c9ca5f0028af4829989"
+          }
+        ]
+      ],
+      "updateTime": 1682693402,
+      "createTime": 1681313443,
+      "histories": [],
+      "created_at": "2023-04-12 23:30:43",
+      "updated_at": "2023-04-28 22:50:02"
+    },
+    {
+      "uuid": "62d426d2a8dd290c36a7c62c23abb0a7",
+      "puuid": "f71e9af3427dd53790b6c63d345ea215",
+      "title": "RM校内赛破风主板pcb",
+      "filename": "RM校内赛破风主板pcb.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "7ceb41e9f586431dab7915fe4bf8eef6": 2,
+        "af56006967ec4e3ab0ab406d3f7325da": 1,
+        "2ee8eb13a0124a108e622ce40c0c25a8": 3,
+        "0129f477903547f89d5cd1fd11c888b2": 1,
+        "82605a93a0be4c79a27d82f67f2aca29": 1,
+        "70aa5812f21f4991bf427395d51849f4": 1,
+        "82e3ceafdb7342c58fd6e8b1a6874e2c": 1,
+        "5b14ce7d551c458c82ba9f299dd09cfb": 1,
+        "1a9b494b74c34d3b879eb7f824b3824d": 1,
+        "923eff2110a24b44a521b4ab1cf3b7fe": 1,
+        "b60f399a7a7e41848b2be1eb49c79141": 1,
+        "dd4872f0dd1046f8aa6aba607b93b45c": 1,
+        "babfbcf393fd4e809a41295479116fc3": 1
+      },
+      "BOM": [],
+      "updateTime": 1682688184,
+      "createTime": 1681313451,
+      "histories": [],
+      "created_at": "2023-04-12 23:30:51",
+      "updated_at": "2023-04-28 21:23:04"
+    },
+    {
+      "uuid": "16462b2dd56ca6d1252684f679b629bc",
+      "puuid": "f71e9af3427dd53790b6c63d345ea215",
+      "title": "1-PCB_STM32_F4最小系统",
+      "filename": "1-PCB_STM32_F4最小系统.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "34d577eba5e3478a823f52d27ff22137": 1,
+        "28ffebd5671c4dbea958b4e7510225a8": 1,
+        "2ada8f4ae55543e0922c8ee62e571dd5": 2
+      },
+      "BOM": [],
+      "updateTime": 1681313456,
+      "createTime": 1681313456,
+      "histories": [],
+      "created_at": "2023-04-12 23:30:56",
+      "updated_at": "2023-04-12 23:30:56"
+    }
+  ],
+  "sort": [],
+  "title": "RM校内赛破风主板",
+  "foldername": "RM校内赛破风主板",
+  "schfilename": "RM校内赛破风主板.json",
+  "schfilemtime": 1682693402042
+}

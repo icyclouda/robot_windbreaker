@@ -1,0 +1,353 @@
+{
+  "uuid": "326d50a543bfb8901212b4e65f110648",
+  "path": "Offline/%E6%A0%A1%E5%86%85RM%E8%88%B5%E6%9C%BA%E9%A9%B1%E5%8A%A8",
+  "name": "校内RM舵机驱动",
+  "content": "",
+  "created_at": "2023-04-27 23:37:49",
+  "updated_at": "2023-04-29 22:54:39",
+  "stick": "",
+  "documents": [
+    {
+      "uuid": "957ba79864897a254bde58a7b3323722",
+      "title": "孙老师修改电阻版本",
+      "description": "",
+      "docType": "1",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "54a0e81b55964c388b15a93573b0428f": 1,
+        "55b2ff2ca7394c09b886409a8916260c": 1,
+        "33e395b910b848669254c815683687d9": 8,
+        "3acf36d4adfa4db1a437ce74c57e97ba": 8,
+        "b748c9597957c20e30840020c699c4a2": 1,
+        "4601ee0923a74dbdaadb17d5375f27d6": 1,
+        "b82150387a2041b4afd55b90c79c5923": 8,
+        "9698a5ebc38f435fb5a5f9ff5b84927c": 6,
+        "37edc24852354228a833dbec5372fa01": 1,
+        "535a8a50d77c42b6abae6374bcc7039d": 1,
+        "b4f63d619a9f4b39943200bcd2f0a9e2": 1
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "0.1uf",
+          2,
+          "C0805",
+          "C1,C5",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "N/A",
+          1,
+          "C0805",
+          "C2",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "22uf",
+          1,
+          "C1206",
+          "C3",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "7bdec8012728462a85919a4d0d033579",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "0.1uf",
+          1,
+          "C1206",
+          "C4",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "7bdec8012728462a85919a4d0d033579",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "22uf",
+          2,
+          "C0805",
+          "C6,C7",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "33pf",
+          1,
+          "C0805",
+          "C9",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "2ee8eb13a0124a108e622ce40c0c25a8",
+            "uuid": "b82150387a2041b4afd55b90c79c5923"
+          }
+        ],
+        [
+          "SMAJ12A_C5249618",
+          1,
+          "SMA_L4.3-W2.6-LS5.2-RD",
+          "D1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C5249618",
+            "BOM_Manufacturer": "ElecSuper(静芯微）",
+            "BOM_Manufacturer Part": "SMAJ12A",
+            "puuid": "b7243d11a5f04fb7894887aaa3569585",
+            "uuid": "37edc24852354228a833dbec5372fa01"
+          }
+        ],
+        [
+          "X6511WV-03H-C30D60",
+          8,
+          "HDR-TH_3P-P2.54-V-M",
+          "H1,H2,H3,H4,H5,H6,H7,H8",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C706875",
+            "BOM_Manufacturer": "XKB Connectivity",
+            "BOM_Manufacturer Part": "X6511WV-03H-C30D60",
+            "BOM_JLCPCB SMD": "Yes",
+            "puuid": "5c0be672313e4206a41dd5398a02f108",
+            "uuid": "3acf36d4adfa4db1a437ce74c57e97ba"
+          }
+        ],
+        [
+          "HDR-F-2.54_2x2",
+          1,
+          "HDR-F-2.54_2X2",
+          "H9",
+          {
+            "BOM_Supplier Part": "C239342",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "3a30720bc96543fd9ac6f339cf522099",
+            "uuid": "b4f63d619a9f4b39943200bcd2f0a9e2"
+          }
+        ],
+        [
+          "3.5uH",
+          1,
+          "IND-SMD_L6.0-W6.0-1",
+          "L1",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "de0265cb34d146cbb66e5c33f41997bb",
+            "uuid": "535a8a50d77c42b6abae6374bcc7039d"
+          }
+        ],
+        [
+          "XT60",
+          1,
+          "TX60-LI-S",
+          "P1",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "82e3ceafdb7342c58fd6e8b1a6874e2c",
+            "uuid": "54a0e81b55964c388b15a93573b0428f"
+          }
+        ],
+        [
+          "HDR-IDC-2.54-2X4P",
+          1,
+          "IDC-TH_8P-P2.54-V-R2-C4-S2.54",
+          "P2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "BOOMELE",
+            "BOM_Manufacturer Part": "IDC Box 2X4 2.54MM",
+            "BOM_Supplier Part": "C9135",
+            "puuid": "7ceb41e9f586431dab7915fe4bf8eef6",
+            "uuid": "b748c9597957c20e30840020c699c4a2"
+          }
+        ],
+        [
+          "220",
+          8,
+          "R0805",
+          "R1,R2,R3,R4,R5,R7,R13,R14",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C305313",
+            "BOM_Manufacturer": "Huaxin S&T",
+            "BOM_Manufacturer Part": "WR08X221JTL",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "33e395b910b848669254c815683687d9"
+          }
+        ],
+        [
+          "10R",
+          1,
+          "R0805",
+          "R6",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "9698a5ebc38f435fb5a5f9ff5b84927c"
+          }
+        ],
+        [
+          "100k",
+          2,
+          "R0805",
+          "R8,R9",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "9698a5ebc38f435fb5a5f9ff5b84927c"
+          }
+        ],
+        [
+          "274k",
+          1,
+          "R0805",
+          "R11",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "9698a5ebc38f435fb5a5f9ff5b84927c"
+          }
+        ],
+        [
+          "9.09k",
+          1,
+          "R0805",
+          "R12",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "9698a5ebc38f435fb5a5f9ff5b84927c"
+          }
+        ],
+        [
+          "30.1k",
+          1,
+          "R0805",
+          "R15",
+          {
+            "BOM_Supplier Part": "",
+            "BOM_Supplier": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "b60f399a7a7e41848b2be1eb49c79141",
+            "uuid": "9698a5ebc38f435fb5a5f9ff5b84927c"
+          }
+        ],
+        [
+          "SS12D06弯针",
+          1,
+          "SW-TH_3P-SS12D06-1",
+          "U1",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C9900027365",
+            "BOM_Manufacturer": "null",
+            "BOM_Manufacturer Part": "SS12D06弯针",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "0129f477903547f89d5cd1fd11c888b2",
+            "uuid": "55b2ff2ca7394c09b886409a8916260c"
+          }
+        ],
+        [
+          "MP2315SGJ-Z",
+          1,
+          "TSOT-23-8_L2.9-W1.6-P0.65-LS2.8-BL",
+          "U2",
+          {
+            "BOM_Supplier": "LCSC",
+            "BOM_Supplier Part": "C3031493",
+            "BOM_Manufacturer": "null",
+            "BOM_Manufacturer Part": "MP2315SGJ-Z",
+            "BOM_JLCPCB Part Class": "Extended Part",
+            "puuid": "5eeabe067f75475e8e1a280aa8294039",
+            "uuid": "4601ee0923a74dbdaadb17d5375f27d6"
+          }
+        ]
+      ],
+      "updateTime": 1682778697,
+      "createTime": 1682609870,
+      "histories": [],
+      "created_at": "2023-04-27 23:37:50",
+      "updated_at": "2023-04-29 22:31:37"
+    },
+    {
+      "uuid": "0c2fc3e1b9f298d45c4e6bc0f8567456",
+      "puuid": "326d50a543bfb8901212b4e65f110648",
+      "title": "PCB_校内RM舵机驱动",
+      "filename": "PCB_校内RM舵机驱动.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "2ee8eb13a0124a108e622ce40c0c25a8": 6,
+        "b7243d11a5f04fb7894887aaa3569585": 1,
+        "5c0be672313e4206a41dd5398a02f108": 8,
+        "82e3ceafdb7342c58fd6e8b1a6874e2c": 1,
+        "7ceb41e9f586431dab7915fe4bf8eef6": 1,
+        "b60f399a7a7e41848b2be1eb49c79141": 14,
+        "0129f477903547f89d5cd1fd11c888b2": 1,
+        "5eeabe067f75475e8e1a280aa8294039": 1,
+        "7bdec8012728462a85919a4d0d033579": 2,
+        "de0265cb34d146cbb66e5c33f41997bb": 1,
+        "3a30720bc96543fd9ac6f339cf522099": 1
+      },
+      "BOM": [],
+      "updateTime": 1682780079,
+      "createTime": 1682771822,
+      "histories": [],
+      "created_at": "2023-04-29 20:37:02",
+      "updated_at": "2023-04-29 22:54:39"
+    }
+  ],
+  "sort": [
+    "957ba79864897a254bde58a7b3323722",
+    "42271d71ff09846f5a06c69be6c706d8"
+  ],
+  "title": "校内RM舵机驱动",
+  "foldername": "校内RM舵机驱动",
+  "schfilename": "校内RM舵机驱动.json",
+  "schfilemtime": 1682778697512
+}

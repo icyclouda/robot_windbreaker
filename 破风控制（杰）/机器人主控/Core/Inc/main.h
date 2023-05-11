@@ -36,7 +36,100 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+typedef struct
+{
+  float kp;       
+  float ki;     
+  float kd;                         
+} PID_parameter;
+	  
+typedef struct
+{
+  int target;       
+  int data_now;     
+  int data_before; 
+  int integral;
+  int last_target;
+} PID_variables;
 
+typedef enum
+{
+	L_F = 0,
+	L_B = 1,
+	R_F = 2,
+	R_B = 3,
+	M_X = 4,
+	M_Y = 5,
+	M_K = 6,
+	M_A = 7,
+	arspace
+}pwm_output_TypeDef;
+
+typedef enum
+{
+	SYMBOL   = 0,
+	MODE     = 1,
+	OPTION   = 2,
+	DATA_L_X = 3,
+	DATA_L_Y = 4,
+	DATA_R_X = 5,
+	DATA_R_Y = 6,
+	JAW      = 7,
+	LIFT     = 8,
+	signal_array_Space = 32
+}signal_TypeDef;
+
+
+typedef enum
+{
+	
+	
+	
+	
+	
+	option_space
+}mani_option;
+
+typedef enum{
+	MANI =0,
+	AJUS =1,
+	MOVI =2,
+	MODE_STATE_space
+}MODE_state;
+
+typedef enum{
+	no_fault = 0,
+	m1_fault = 1,
+	m2_fault = 2,
+	xp_fault = 3,
+	xm_fault = 4,
+	yp_fault = 5,
+	ym_fault = 6,
+	ap_fault = 7,
+	am_fault = 8,
+	fault_Space
+}mani_fault_state;
+
+typedef enum{
+	mani_sita1     =  0,
+	mani_sita2,  
+	mani_sita3,
+	mani_L_sita1,     
+	mani_L_sita2,     
+	mani_L_sita3,
+	mani_L_X,
+	mani_L_Y,
+	mani_L_A,
+	mani_m1,   
+	mani_m2,  
+	mani_n,
+	mani_v,
+	mani_dx_target, 
+	mani_dy_target, 
+	mani_da_target,	
+	mani_arrspace
+}manipulator_arrspace;
+	
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -127,6 +220,46 @@ void Error_Handler(void);
 #define R_F_POS_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
+#define signal_per_round   330 //一圈多少个信号
+#define speed_param 5  //1500/signal_per_round 
+#define l1 235
+#define l2 215
+
+#define error_m1            error_status[m1_fault]=1
+#define if_m1_error        	error_status[m1_fault]==1
+
+#define error_m2            error_status[m2_fault]=1
+#define if_m2_error        	error_status[m2_fault]==1
+
+#define error_x_plus        error_status[xp_fault]=1//x+后出错
+#define error_x_minus       error_status[xm_fault]=1
+#define error_y_plus        error_status[yp_fault]=1
+#define error_y_minus       error_status[ym_fault]=1
+#define error_a_plus        error_status[ap_fault]=1
+#define error_a_minus       error_status[am_fault]=1
+
+#define if_error_x_plus     error_status[xp_fault]==1
+#define if_error_x_minus    error_status[xm_fault]==0
+#define if_error_y_plus     error_status[yp_fault]==1
+#define if_error_y_minus    error_status[ym_fault]==0
+#define if_error_a_plus     error_status[ap_fault]==1
+#define if_error_a_minus    error_status[am_fault]==0
+
+#define no_fault_happended  for(int i=0;i<fault_Space;i++){error_status[i]=0;}
+
+#define x_last_plus       	mani_status[mani_dx_target]=1
+#define x_last_minus		mani_status[mani_dx_target]=0
+#define y_last_plus       	mani_status[mani_dy_target]=1
+#define y_last_minus		mani_status[mani_dy_target]=0
+#define a_last_plus       	mani_status[mani_da_target]=1
+#define a_last_minus		mani_status[mani_da_target]=0
+
+#define if_x_plus           mani_status[mani_dx_target]==1
+#define if_y_plus           mani_status[mani_dy_target]==1
+#define if_a_plus           mani_status[mani_da_target]==1
+#define if_x_minus          mani_status[mani_dx_target]==0
+#define if_y_minus          mani_status[mani_dy_target]==0
+#define if_a_minus          mani_status[mani_da_target]==0
 
 /* USER CODE END Private defines */
 

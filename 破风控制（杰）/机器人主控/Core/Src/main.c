@@ -41,78 +41,10 @@
 //-------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------USER-----CODE---BEGIN-----PRIVATE--TYPEDEF---------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------
-#define signal_per_round   330 
-#define speed_param 5  //1500/signal_per_round 
-#define l1 215
-#define l2 250
 
 
-typedef struct
-{
-  float kp;       
-  float ki;     
-  float kd;                         
-} PID_parameter;
-	  
-typedef struct
-{
-  int target;       
-  int data_now;     
-  int data_before; 
-  int integral;
-  int last_target;
-} PID_variables;
 
-typedef enum
-{
-	L_F = 0,
-	L_B = 1,
-	R_F = 2,
-	R_B = 3,
-	M_X = 4,
-	M_Y = 5,
-	M_K = 6,
-	M_A = 7,
-	arspace
-}pwm_output_TypeDef;
 
-typedef enum
-{
-	SYMBOL   = 0,
-	MODE     = 1,
-	OPTION   = 2,
-	DATA_L_X = 3,
-	DATA_L_Y = 4,
-	DATA_R_X = 5,
-	DATA_R_Y = 6,
-	signal_array_Space = 32
-}signal_TypeDef;
-
-typedef enum{
-	MANI =0,
-	AJUS =1,
-	MOVI =2,
-	MODE_STATE_space
-}MODE_state;
-
-typedef enum{
-	no_fault = 0,
-	m1_fault = 1,
-	m2_fault = 2,
-	fault_Space
-}mani_fault_state;
-
-typedef enum{
-	mani_sita1  =  0,
-	mani_sita2  =  1,
-	mani_sita3  =  2,
-	mani_m1     =  3,
-	mani_m2     =  4,
-	mani_n      =  5,
-	mani_v      =  6,
-	mani_arrspace
-}manipulator_arrspace;
-	
 	
 	
 
@@ -140,9 +72,10 @@ extern unsigned char gImage_windbreaker[390];
 unsigned char controller_signal[signal_array_Space] = {0};
 int           pwm_output[arspace]= {0};
 short         motor_speed[arspace] = {0};
-int           target[arspace]={0};
+double           target[arspace]={0};
 double        mani_status[mani_arrspace]={0};
-
+int           error_status[fault_Space]={0};
+int           o_limit[10]={0};
 PID_parameter drive_pidp_LF;
 PID_parameter drive_pidp_LB;
 PID_parameter drive_pidp_RF;
@@ -155,16 +88,19 @@ PID_variables drive_pidv_R_B;
 
 
 unsigned char temp;
-unsigned char data_L_X=0,data_L_Y=0,data_R_X=0,data_R_Y=0;
+unsigned char data_L_X=0, data_L_Y=0,data_R_X=0,data_R_Y=0;
 unsigned int i=0;
          int motor_rotate_speed=0 , target_cal=0;
-
-
+unsigned int mani_prescaler=0;
+unsigned int mani_lock_flag=1023;
+unsigned int mani_tlock_flag=0;
 
 int temp_X,temp_Y,temp_K,temp_A;
-int           m_reset_flag   =	 0;
-int           m_error_flag   =   0;
+int m_reset_flag = 0;
+//int m_error_flag = 0;
 
+float a=0;
+int w=0;//错误急停判断debug标志位
 //-------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------USER-----CODE---END-----PRIVATE------VARIABLES--------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------
@@ -182,11 +118,12 @@ void get_speed(short *rotate_speed);
 void set_pidp(PID_parameter *hpidp,int KP, int KI ,int KD);
 void input_pidv(PID_variables *hpidv,int Target,int Data_now);
 int pid_cal(PID_parameter *hpidp,PID_variables *hpidv);
-void pid_protect(PID_parameter *hpidp,PID_variables *hpidv);
-int abs(int a);
+void pid_autoset(PID_parameter *hpidp,PID_variables *hpidv);
+int ABS(int a);
 int nominus(int a);
 int pwm_limit(int pwm);
 void mani_cul(double x,double y,double sita);
+void delay_us(uint32_t nus);
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------USER-----CODE---BEGIN-----PRIVATE--FUNCTION---PROTOTYPES----------------------
@@ -256,6 +193,8 @@ int main(void)
 	
    
    NRF24L01_Init();
+//	printf("\r\ninit OK!\r\n");
+//	temp = 4;
 	while(NRF24L01_Check()){
 		OLED_show_string(2, 0, "NRF24L01_test_fail");
 	}
@@ -263,20 +202,25 @@ int main(void)
 	OLED_refresh_gram();
 	OLED_show_string(2, 0, "NRF24L01_test_succeeded");
     
-	RX_Mode();
+	RX_Mode();	//接收模式
 	
 	HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_2);	    
+	HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_2);	    // TIM1(pwm)
 	HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_4);
 
-	HAL_TIM_PWM_Start_IT(&htim3,TIM_CHANNEL_2);	   
+	HAL_TIM_PWM_Start_IT(&htim3,TIM_CHANNEL_2);	    // TIM1(pwm)
 	HAL_TIM_PWM_Start_IT(&htim3,TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start_IT(&htim3,TIM_CHANNEL_4);
+	HAL_TIM_PWM_Start_IT(&htim9,TIM_CHANNEL_1);	    // TIM1(pwm)
+	HAL_TIM_PWM_Start_IT(&htim9,TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start_IT(&htim11,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start_IT(&htim12,TIM_CHANNEL_1);	    // TIM1(pwm)
+	HAL_TIM_PWM_Start_IT(&htim12,TIM_CHANNEL_2);
+
 	
-
-
-	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1); 
+	
+	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1); // 开启编码器
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_2); 	
 	HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_1); 
 	HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_2); 
@@ -299,6 +243,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  controller_signal[OPTION]=2;
+//	controller_signal[MODE]=0;
+	  
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -313,8 +260,8 @@ int main(void)
 	    data_R_Y=controller_signal[DATA_R_Y];
 		}
 		else{
-			data_L_X=25;
-			data_L_Y=23;
+			data_L_X=24;
+			data_L_Y=24;
 			data_R_X=24;
 			data_R_Y=25;
 			
@@ -327,15 +274,19 @@ int main(void)
 			
   }
 		else if(controller_signal[MODE]==MANI){
-			if(m_error_flag==m1_fault)           {OLED_printf(2,0,"error_m1=%lf", mani_status[mani_m1]);}
-			else if(m_error_flag==m2_fault)      {OLED_printf(2,0,"error_m2=%lf", mani_status[mani_m2]);}
+			
+			OLED_printf(0,1,"xp=%d-xm=%d-w=%d",error_status[xp_fault],error_status[xm_fault],w);
+			OLED_printf(1,1,"dx:%lf-dy:%lf",mani_status[mani_dx_target],mani_status[mani_dy_target]);
+			if(error_status[m1_fault]==1)           {OLED_printf(2,0,"error_m1=%lf", mani_status[mani_m1]);}
+			else if(error_status[m2_fault]==1)      {OLED_printf(2,0,"error_m2=%lf", mani_status[mani_m2]);}
 			else{	
 				OLED_printf(2,0,"s1=%lf-s2=%lf",mani_status[mani_sita1],mani_status[mani_sita2]);
-				OLED_printf(3,0,"s3=%lf",mani_status[mani_sita3 ]);
+				OLED_printf(3,0,"s3=%lf-S=%d",mani_status[mani_sita3],target[M_A]);//controller_signal[JAW]//target[M_A]
 			}
-			OLED_printf(4,0,"X=%lf-Y=%lf-sita=%lf",(double)target[M_X],(double)target[M_Y],(double)target[M_A]);
+			OLED_printf(4,1,"X=%lf-Y=%lf",target[M_X],target[M_Y]);
 		}
-		HAL_Delay(10);
+		HAL_Delay(3);
+		//DELAY_US(1);
   
   }
   //-------------------------------------------------------------------------------------------------------------------------------------
@@ -403,26 +354,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     {
 		if(controller_signal[MODE]==MOVI){//------------------------------------------moving
 			m_reset_flag=0;
+			no_fault_happended//机械臂模式的清除错误标记
 			if(controller_signal[OPTION]==2){
-				motor_rotate_speed=330;
-				set_pidp(&drive_pidp_LF,50,0.2 ,5);
-				set_pidp(&drive_pidp_LB,50,0.2 ,5);
-				set_pidp(&drive_pidp_RF,50,0.2 ,5);
-				set_pidp(&drive_pidp_RB,50,0.2 ,5);
+				motor_rotate_speed=340;
+//				set_pidp(&drive_pidp_LF,50,0.2 ,5);
+//				set_pidp(&drive_pidp_LB,50,0.2 ,5);
+//				set_pidp(&drive_pidp_RF,50,0.2 ,5);
+//				set_pidp(&drive_pidp_RB,50,0.2 ,5);
 			}
 			else if (controller_signal[OPTION]==1){
-				motor_rotate_speed=160;
-				set_pidp(&drive_pidp_LF,20,0.1 ,1);
-				set_pidp(&drive_pidp_LB,20,0.1 ,1);
-				set_pidp(&drive_pidp_RF,20,0.1 ,1);
-				set_pidp(&drive_pidp_RB,20,0.1 ,1);
+				motor_rotate_speed=180;
+//				set_pidp(&drive_pidp_LF,20,0.1 ,1);
+//				set_pidp(&drive_pidp_LB,20,0.1 ,1);
+//				set_pidp(&drive_pidp_RF,20,0.1 ,1);
+//				set_pidp(&drive_pidp_RB,20,0.1 ,1);
 			}
 			else if(controller_signal[OPTION]==0){
 				motor_rotate_speed=80;
-				set_pidp(&drive_pidp_LF,10,0.001 ,0.1);
-				set_pidp(&drive_pidp_LB,10,0.001 ,0.1);
-				set_pidp(&drive_pidp_RF,10,0.001 ,0.1);
-				set_pidp(&drive_pidp_RB,10,0.001 ,0.1);
+//				set_pidp(&drive_pidp_LF,10,0.001 ,0.1);
+//				set_pidp(&drive_pidp_LB,10,0.001 ,0.1);
+//				set_pidp(&drive_pidp_RF,10,0.001 ,0.1);
+//				set_pidp(&drive_pidp_RB,10,0.001 ,0.1);
 			}
 			else{
 				motor_rotate_speed=0;
@@ -436,124 +388,302 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 			get_speed(motor_speed);
 			
-			input_pidv(&drive_pidv_L_F,target[L_F],(int)motor_speed[L_F]);
-			pid_protect(&drive_pidp_LF,&drive_pidv_L_F);
+			input_pidv(&drive_pidv_L_F,(int)target[L_F],(int)motor_speed[L_F]);
+			pid_autoset(&drive_pidp_LF,&drive_pidv_L_F);
 			pwm_output[L_F]= pwm_limit(pid_cal(&drive_pidp_LF,&drive_pidv_L_F)); //LF
 			drive_pidv_L_F.data_before=drive_pidv_L_F.data_now;
 			drive_pidv_L_F.last_target=drive_pidv_L_F.target;
 			
-			input_pidv(&drive_pidv_R_F,target[R_F],(int)motor_speed[R_F]);
-			pid_protect(&drive_pidp_RF,&drive_pidv_R_F);
+			input_pidv(&drive_pidv_R_F,(int)target[R_F],(int)motor_speed[R_F]);
+			pid_autoset(&drive_pidp_RF,&drive_pidv_R_F);
 			pwm_output[R_F]=pwm_limit( pid_cal(&drive_pidp_RF,&drive_pidv_R_F)); //RF
 			drive_pidv_R_F.data_before=drive_pidv_R_F.data_now;
 			drive_pidv_R_F.last_target=drive_pidv_R_F.target;
 			
-			input_pidv(&drive_pidv_L_B,target[L_B],(int)motor_speed[L_B]);
-			pid_protect(&drive_pidp_LB,&drive_pidv_L_B);
+			input_pidv(&drive_pidv_L_B,(int)target[L_B],(int)motor_speed[L_B]);
+			pid_autoset(&drive_pidp_LB,&drive_pidv_L_B);
 			pwm_output[L_B]=pwm_limit(pid_cal(&drive_pidp_LB,&drive_pidv_L_B)); //LB
 			drive_pidv_L_B.data_before=drive_pidv_L_B.data_now;
 			drive_pidv_L_B.last_target=drive_pidv_L_B.target;
 			
-			input_pidv(&drive_pidv_R_B,target[R_B],(int)motor_speed[R_B]);
-			pid_protect(&drive_pidp_RB,&drive_pidv_R_B);		
+			input_pidv(&drive_pidv_R_B,(int)target[R_B],(int)motor_speed[R_B]);
+			pid_autoset(&drive_pidp_RB,&drive_pidv_R_B);		
 			pwm_output[R_B]=pwm_limit(pid_cal(&drive_pidp_RB,&drive_pidv_R_B)); //RB
 			drive_pidv_R_B.data_before=drive_pidv_R_B.data_now;
 			drive_pidv_R_B.last_target=drive_pidv_R_B.target;
 			
 			PWM_output(pwm_output);
-			UART_SendData4(motor_speed[L_F],motor_speed[R_F],motor_speed[L_B],motor_speed[R_B]);
+			UART_SendData4(motor_speed[R_F],motor_speed[L_B],drive_pidp_RB.kp,drive_pidp_RB.kp);
 			
 		}
-		else if(controller_signal[MODE]==MANI){//----------------------------------------------manipulator
-			
-			temp_X=4*((int)data_R_X-25);
-			temp_Y=4*((int)data_R_Y-23);
-			temp_A=4*((int)data_L_Y-25);
-			temp_K=4*((int)data_L_X-24);
-			if(m_reset_flag ==0){
-				target[M_X]=0;
-				target[M_Y]=35;
-				target[M_A]=0;
-				target[M_K]=0;
-				m_reset_flag=1;
-			}
-			//--------------------------------------------------x
-			if(temp_X>90)                   {target[M_X]+=3;}
-			else if(temp_X<=90&&temp_X>50)  {target[M_X]+=2;}
-			else if(temp_X<=50&&temp_X>10)  {target[M_X]+=1;}
-			else if(temp_X<-10&&temp_X>=-50){target[M_X]-=1;}
-			else if(temp_X<-50&&temp_X>=90) {target[M_X]-=2;}
-			else if(temp_X<-90)             {target[M_X]-=3;}
-				if     (target[M_X]<=0)		    {target[M_X]=0  ;}
-				else if(target[M_X]>=l1+l2)    	{target[M_X]=l1+l2;}           
-			//---------------------------------------------------y
-			if(temp_Y>90)                   {target[M_Y]+=3;}
-			else if(temp_Y<=90&&temp_Y>50)  {target[M_Y]+=2;}
-			else if(temp_Y<=50&&temp_Y>10)  {target[M_Y]+=1;}
-			else if(temp_Y<-10&&temp_Y>=-50){target[M_Y]-=1;}
-			else if(temp_Y<-50&&temp_Y>=90) {target[M_Y]-=2;}
-			else if(temp_Y<-90)				{target[M_Y]-=3;}
-				if     (target[M_Y]<=0)		    {target[M_Y]=0  ;}
-				else if(target[M_Y]>=l1+l2)    	{target[M_Y]=l1+l2;}
-			//---------------------------------------------------k
-			if(temp_K>90)                   {target[M_K]=100;}
-			else if(temp_K<=90&&temp_K>50)  {target[M_K]=70;}
-			else if(temp_K<=50&&temp_K>10)  {target[M_K]=40;}
-			else if(temp_K<-10&&temp_K>=-50){target[M_K]=-40;}
-			else if(temp_K<-50&&temp_K>=90) {target[M_K]=-70;}
-			else if(temp_K<-90)             {target[M_K]=-100;}
-			else  							{target[M_K]=0;}
-			//----------------------------------------------------a
-			if(temp_A>90)                   {target[M_A]+=3;}
-			else if(temp_A<=90&&temp_A>50)  {target[M_A]+=2;}
-			else if(temp_A<=50&&temp_A>10)  {target[M_A]+=1;}
-			else if(temp_A<-10&&temp_A>=-50){target[M_A]-=1;}
-			else if(temp_A<-50&&temp_A>=90) {target[M_A]-=2;}
-			else if(temp_A<-90)             {target[M_A]-=3;}//0-180
-				if     (target[M_A]<=0)		    {target[M_A]=0;}
-				else if(target[M_A]>=90)    	{target[M_A]=90;} 
-			//----------------------------------------------------------------
-//			target[M_X]=0;
-//				
-//			target[M_Y]=l1+l2;
-//			
-//			target[M_A]=0;
-			mani_cul((double)target[M_X],(double)target[M_Y],(double)target[M_A]*3.141593/180);
-			
-			get_speed(motor_speed);
-			input_pidv(&drive_pidv_L_F,target[M_K],(int)motor_speed[L_F]);
-			pid_protect(&drive_pidp_LF,&drive_pidv_L_F);
-			pwm_output[L_F]= pwm_limit(pid_cal(&drive_pidp_LF,&drive_pidv_L_F)); //LF
-			drive_pidv_L_F.data_before=drive_pidv_L_F.data_now;
-			drive_pidv_L_F.last_target=drive_pidv_L_F.target;
-			
-			input_pidv(&drive_pidv_R_F,-target[M_K],(int)motor_speed[R_F]);
-			pid_protect(&drive_pidp_RF,&drive_pidv_R_F);
-			pwm_output[R_F]=pwm_limit( pid_cal(&drive_pidp_RF,&drive_pidv_R_F)); //RF
-			drive_pidv_R_F.data_before=drive_pidv_R_F.data_now;
-			drive_pidv_R_F.last_target=drive_pidv_R_F.target;
-			
-			input_pidv(&drive_pidv_L_B,-target[M_K],(int)motor_speed[L_B]);
-			pid_protect(&drive_pidp_LB,&drive_pidv_L_B);
-			pwm_output[L_B]=pwm_limit(pid_cal(&drive_pidp_LB,&drive_pidv_L_B)); //LB
-			drive_pidv_L_B.data_before=drive_pidv_L_B.data_now;
-			drive_pidv_L_B.last_target=drive_pidv_L_B.target;
-			
-			input_pidv(&drive_pidv_R_B,target[M_K],(int)motor_speed[R_B]);
-			pid_protect(&drive_pidp_RB,&drive_pidv_R_B);		
-			pwm_output[R_B]=pwm_limit(pid_cal(&drive_pidp_RB,&drive_pidv_R_B)); //RB
-			drive_pidv_R_B.data_before=drive_pidv_R_B.data_now;
-			drive_pidv_R_B.last_target=drive_pidv_R_B.target;
-			
-			PWM_output(pwm_output);
-			
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,(uint16_t)(mani_status[mani_sita1]*2000/3.141593+500));
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,(uint16_t)(mani_status[mani_sita2]*2000/3.141593+500));
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,2500);
+		else if(controller_signal[MODE]==MANI){//-------------------------------------------------manipulator
+				temp_X=4*((int)data_L_X-24);
+				temp_Y=4*((int)data_L_Y-24);
+				temp_A=4*((int)data_R_X-25);
+				temp_K=4*((int)data_R_Y-23);
+				if(m_reset_flag ==0){
+					target[M_X]=200;
+					target[M_Y]=100;
+					target[M_A]=0  ;
+					target[M_K]=0  ;
+				mani_status[mani_L_X]=0;
+				mani_status[mani_L_Y]=0;
+				mani_status[mani_L_A]=0;
+					m_reset_flag=1;
+				}
+				//--------------------------------------------------x
+				
+				if(temp_X>90)                   {target[M_X]+=2  ;x_last_plus;}
+				else if(temp_X<=90&&temp_X>50)  {target[M_X]+=1  ;x_last_plus;}
+				else if(temp_X<=50&&temp_X>10)  {target[M_X]+=0.5;x_last_plus;}
+				else if(temp_X<-10&&temp_X>=-50){target[M_X]-=0.5;x_last_minus;}
+				else if(temp_X<-50&&temp_X>=90) {target[M_X]-=1  ;x_last_minus;}
+				else if(temp_X<-90)             {target[M_X]-=2  ;x_last_minus;}
+          
+				//---------------------------------------------------y
+				
+				if(temp_Y>90)                   {target[M_Y]+=2  ;y_last_plus;}
+				else if(temp_Y<=90&&temp_Y>50)  {target[M_Y]+=1  ;y_last_plus;}
+				else if(temp_Y<=50&&temp_Y>10)  {target[M_Y]+=0.5;y_last_plus;}
+				else if(temp_Y<-10&&temp_Y>=-50){target[M_Y]-=0.5;y_last_minus;}
+				else if(temp_Y<-50&&temp_Y>=90) {target[M_Y]-=1  ;y_last_minus;}
+				else if(temp_Y<-90)				{target[M_Y]-=2  ;y_last_minus;}
 
-		
+				//---------------------------------------------------k
+				
+				if(temp_K>90)                   {target[M_K]=70;}
+				else if(temp_K<=90&&temp_K>50)  {target[M_K]=50;}
+				else if(temp_K<=50&&temp_K>10)  {target[M_K]=40;}
+				else if(temp_K<-10&&temp_K>=-50){target[M_K]=-40;}
+				else if(temp_K<-50&&temp_K>=90) {target[M_K]=-50;}
+				else if(temp_K<-90)             {target[M_K]=-70;}
+				else  							{target[M_K]=0;}
+				
+				//----------------------------------------------------a
+				
+				if(temp_A>90)                   {target[M_A]+=0.8;a_last_plus;}
+				else if(temp_A<=90&&temp_A>50)  {target[M_A]+=0.4;a_last_plus;}
+				else if(temp_A<=50&&temp_A>10)  {target[M_A]+=0.1;a_last_plus;}
+				else if(temp_A<-10&&temp_A>=-50){target[M_A]-=0.1;a_last_minus;}
+				else if(temp_A<-50&&temp_A>=90) {target[M_A]-=0.4;a_last_minus;}
+				else if(temp_A<-90)             {target[M_A]-=0.8;a_last_minus;}//0-180
+				
+				//---------------------------------------------------------
+				//---------------------------------------------	//限制&错误急停
+				
+					if((if_error_x_plus && if_x_plus)||(if_error_x_minus && if_x_minus))
+						{target[M_X]=mani_status[mani_L_X];w++;}
+					if((if_error_y_plus && if_y_plus)||(if_error_y_minus && if_y_minus))
+						{target[M_Y]=mani_status[mani_L_Y];}
+					if((if_error_a_plus && if_a_plus)||(if_error_a_minus && if_a_minus))
+						{target[M_A]=mani_status[mani_L_A];}
+				//------------------------判断错误原因与动作并 节源
+				//----------------------------------------------------------	
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
+					
+//				if(controller_signal[OPTION]==1&&o_limit[0]){//prot数组标记
+//				target[M_X]=200 ;
+//				target[M_Y]=100 ;
+//				target[M_A]=0   ;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[0]=1;
+//				}
+//				else if(controller_signal[OPTION]==2&&o_limit[1]){//up
+//				target[M_X]=300;
+//				target[M_Y]=300;
+//				target[M_A]=90 ;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[1]=1;
+//				}
+//				else if(controller_signal[OPTION]==3&&o_limit[2]){//mid
+//				target[M_X]=50;
+//				target[M_Y]=150;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[2]=1;
+//				}
+//				else if(controller_signal[OPTION]==4&&o_limit[3]){//down
+//				target[M_X]=60;
+//				target[M_Y]=60;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[3]=1;
+//				}
+//				else if(controller_signal[OPTION]==5&&o_limit[4]){//tou
+//				target[M_X]=70;
+//				target[M_Y]=70;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[4]=1;
+//				}
+//				else if(controller_signal[OPTION]==6&&o_limit[5]){//collect
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[5]=1;
+//					
+//				}
+//				else if(controller_signal[OPTION]==7&&o_limit[6]){
+//				target[M_X]=80;
+//				target[M_Y]=80;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[6]=1;
+//				}
+//				else if(controller_signal[OPTION]==8&&o_limit[7]){
+//				target[M_X]=90;
+//				target[M_Y]=90;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[7]=1;
+//				}
+//				else if(controller_signal[OPTION]==9&&o_limit[8]){
+//				target[M_X]=100;
+//				target[M_Y]=100;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[8]=1;
+//				}
+//				else if(controller_signal[OPTION]==10&&o_limit[9]){
+//				target[M_X]=200;
+//				target[M_Y]=200;
+//				target[M_A]=0;
+//				for(int i=0;i<10;i++){o_limit[i]=0;}
+//				o_limit[9]=1;
+//				}
+//---------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------机械臂点位（二进制标记）
+				if(controller_signal[OPTION]==1&&(mani_lock_flag&1)){//prot
+				target[M_X]=200 ;
+				target[M_Y]=100 ;
+				target[M_A]=0   ;
+				mani_lock_flag=1022;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==2&&(mani_lock_flag&2)){//up
+				target[M_X]=300;
+				target[M_Y]=300;
+				target[M_A]=90 ;
+				mani_lock_flag=1021;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==3&&(mani_lock_flag&4)){//mid
+				target[M_X]=150;
+				target[M_Y]=150;
+				target[M_A]=0;
+				mani_lock_flag=1019;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==4&&(mani_lock_flag&8)){//down
+				target[M_X]=200;
+				target[M_Y]=100;
+				target[M_A]=0;
+				mani_lock_flag=1015;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==5&&(mani_lock_flag&16)){//tou
+				target[M_X]=200;
+				target[M_Y]=100;
+				target[M_A]=0;
+				mani_lock_flag=1007;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==6&&(mani_lock_flag&32)){//collect
+				mani_lock_flag=991;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==7&&(mani_lock_flag&64)){
+				target[M_X]=200;
+				target[M_Y]=100;
+				target[M_A]=0;
+				mani_lock_flag=959;
+				no_fault_happended
+				}
+				else if(controller_signal[OPTION]==8&&(mani_lock_flag&128)){
+				target[M_X]=200;
+				target[M_Y]=100;
+				target[M_A]=0;
+				mani_lock_flag=895;
+				no_fault_happended	
+				}
+				else if(controller_signal[OPTION]==9&&(mani_lock_flag&256)){
+				target[M_X]=200;
+				target[M_Y]=100;
+				target[M_A]=0;
+				mani_lock_flag=767;
+				no_fault_happended	
+				}
+				else if(controller_signal[OPTION]==10&&(mani_lock_flag&512)){
+				target[M_X]=200;
+				target[M_Y]=200;
+				target[M_A]=0;
+				mani_lock_flag=511;
+				no_fault_happended	
+				}
+				//-----------------------------------------------------------
+	//			target[M_X]=200;
+	//				
+	//			target[M_Y]=200;
+	//			
+	//			target[M_A]=-90;
+				mani_cul(target[M_X],target[M_Y],target[M_A]);
+				
+				get_speed(motor_speed);
+				input_pidv(&drive_pidv_L_F,(int)target[M_K],(int)motor_speed[L_F]);
+				pid_autoset(&drive_pidp_LF,&drive_pidv_L_F);
+				pwm_output[L_F]= pwm_limit(pid_cal(&drive_pidp_LF,&drive_pidv_L_F)); //LF
+				drive_pidv_L_F.data_before=drive_pidv_L_F.data_now;
+				drive_pidv_L_F.last_target=drive_pidv_L_F.target;
+				
+				input_pidv(&drive_pidv_R_F,-(int)target[M_K],(int)motor_speed[R_F]);
+				pid_autoset(&drive_pidp_RF,&drive_pidv_R_F);
+				pwm_output[R_F]=pwm_limit( pid_cal(&drive_pidp_RF,&drive_pidv_R_F)); //RF
+				drive_pidv_R_F.data_before=drive_pidv_R_F.data_now;
+				drive_pidv_R_F.last_target=drive_pidv_R_F.target;
+				
+				input_pidv(&drive_pidv_L_B,-(int)target[M_K],(int)motor_speed[L_B]);
+				pid_autoset(&drive_pidp_LB,&drive_pidv_L_B);
+				pwm_output[L_B]=pwm_limit(pid_cal(&drive_pidp_LB,&drive_pidv_L_B)); //LB
+				drive_pidv_L_B.data_before=drive_pidv_L_B.data_now;
+				drive_pidv_L_B.last_target=drive_pidv_L_B.target;
+				
+				input_pidv(&drive_pidv_R_B,(int)target[M_K],(int)motor_speed[R_B]);
+				pid_autoset(&drive_pidp_RB,&drive_pidv_R_B);		
+				pwm_output[R_B]=pwm_limit(pid_cal(&drive_pidp_RB,&drive_pidv_R_B)); //RB
+				drive_pidv_R_B.data_before=drive_pidv_R_B.data_now;
+				drive_pidv_R_B.last_target=drive_pidv_R_B.target;
+				
+				PWM_output(pwm_output);
+				
+				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,(uint16_t)(mani_status[mani_sita1]*2000/3.141593+500));
+				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,(uint16_t)(mani_status[mani_sita2]*2000/3.141593+500));
+				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,(uint16_t)(mani_status[mani_sita3]*2000/3.141593+500));
+				//(uint16_t)(mani_status[mani_sita1]*2000/3.141593+500)
+//				mani_prescaler=0;
+
 		}
-    }
+		
+	if(controller_signal[JAW])     {__HAL_TIM_SET_COMPARE(&htim9, TIM_CHANNEL_1,1500);}
+	else                           {__HAL_TIM_SET_COMPARE(&htim9, TIM_CHANNEL_1,2500);}//未测试具体数值
+	
+	if(controller_signal[JAW])     {__HAL_TIM_SET_COMPARE(&htim9, TIM_CHANNEL_2,1500);}
+	else                           {__HAL_TIM_SET_COMPARE(&htim9, TIM_CHANNEL_2,2500);}//未测试具体数值
+	
+	if(controller_signal[JAW])     {__HAL_TIM_SET_COMPARE(&htim11, TIM_CHANNEL_1,1500);}
+	else                           {__HAL_TIM_SET_COMPARE(&htim11, TIM_CHANNEL_1,2500);}//未测试具体数值
+	
+	if(controller_signal[JAW])     {__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1,1500);}
+	else                           {__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1,2500);}//未测试具体数值
+	
+	if(controller_signal[JAW])     {__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2,1500);}
+	else                           {__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2,2500);}//未测试具体数值
+	
+	
+//	if(controller_signal[LIFT])    {__HAL_TIM_SET_COMPARE(&htim9, TIM_CHANNEL_2,2500);}
+//	else                           {__HAL_TIM_SET_COMPARE(&htim9, TIM_CHANNEL_2, 500);}//未测试具体数值
+	
+	
+	}
 	if(htim == (&htim7)){
 		
 		OLED_refresh_gram();
@@ -602,10 +732,10 @@ void PWM_output(int *pwm ){
 		HAL_GPIO_WritePin(R_B_NEG_GPIO_Port,R_B_NEG_Pin,GPIO_PIN_SET);
 	}
 	
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,(uint16_t)(abs(pwm[L_F])));
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,(uint16_t)(abs(pwm[R_F])));
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,(uint16_t)(abs(pwm[L_B])));
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4,(uint16_t)(abs(pwm[R_B])));
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,(uint16_t)(ABS(pwm[L_F])));
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,(uint16_t)(ABS(pwm[R_F])));
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,(uint16_t)(ABS(pwm[L_B])));
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4,(uint16_t)(ABS(pwm[R_B])));
 
 }
 int pwm_limit(int pwm){
@@ -643,7 +773,7 @@ void input_pidv(PID_variables *hpidv,int Target,int Data_now){
 	hpidv->data_now=Data_now;
 	hpidv->integral+=(Target-Data_now);
 	if(Target<20&&Target>-20){hpidv->target=0;}
-	if(hpidv->integral > 1000|| hpidv->integral < -1000||(hpidv->target<50&&hpidv->target>-50)){
+	if(hpidv->integral > 1000|| hpidv->integral <-1000||(hpidv->target<50&&hpidv->target>-50)){
 		hpidv->integral=0;}
 	
 }
@@ -661,7 +791,11 @@ void mani_cul(double x,double y,double sita){
 
     mani_status[mani_m1]=-(l2*l2-l1*l1-x*x-y*y)/(2*l1*sqrt(x*x+y*y));
     if(mani_status[mani_m1]>1||mani_status[mani_m1]<-1){
-        m_error_flag   =   m1_fault;
+        error_m1;
+		if(if_x_plus)      {error_x_plus;}
+		else if(if_x_minus){error_x_minus;}
+		if(if_y_plus)      {error_y_plus;}
+		else if(if_y_minus){error_y_minus;}
     }
     else{
 		if(y==0){mani_status[mani_v]=1.570796;}
@@ -677,7 +811,11 @@ void mani_cul(double x,double y,double sita){
         if       (mani_status[mani_m2]<1.0001&&mani_status[mani_m2]>=1)       {mani_status[mani_m2]=1;}
         else if(mani_status[mani_m2]>-1.0001&&mani_status[mani_m2]<=-1)       {mani_status[mani_m2]=-1;}
         if(mani_status[mani_m2]>1||mani_status[mani_m2]<-1){
-                m_error_flag   =   m2_fault;
+			error_m2;
+			if(if_x_plus)      {error_x_plus;}
+			else if(if_x_minus){error_x_minus;}
+			if(if_y_plus)      {error_y_plus;}
+			else if(if_y_minus){error_y_minus;}
         }
         else{
                 if(mani_status[mani_m2]==0){
@@ -693,15 +831,37 @@ void mani_cul(double x,double y,double sita){
                     mani_status[mani_n]=asin(mani_status[mani_m2]);
                 }
                 
-
+            // printf("%lf\n",k2);
             mani_status[mani_sita2]=3.141593-mani_status[mani_n]-mani_status[mani_sita1];
-
-            mani_status[mani_sita3]=sita-mani_status[mani_sita1]-mani_status[mani_sita2]+2*3.141593;
-
-             m_error_flag   =  no_fault;
-    
+            // if(sita2<=0&&sita2!=-3.141593){
+            //     sita2+=3.141593;
+            // }
+            // if(sita2==-3.141593){
+            //     sita2=-sita2;
+            // }
+			
+            mani_status[mani_sita3]=3*3.141593/2+sita*3.141593/180-mani_status[mani_sita1]-mani_status[mani_sita2];
+			if(mani_status[mani_sita3]<0){
+				error_a_minus;
+				mani_status[mani_sita3]=mani_status[mani_L_sita3];
+				}
+			else if(mani_status[mani_sita3]>3.141593){
+				error_a_plus;
+				mani_status[mani_sita3]=mani_status[mani_L_sita3];
+			}
+            // printf("%lf\n",asin(-0.6));
+            no_fault_happended
+			
+			
             }
     }
+	
+	//------------------------------------------------------------------
+	mani_status[mani_L_sita1]=mani_status[mani_sita1];
+	mani_status[mani_L_sita2]=mani_status[mani_sita2];
+	mani_status[mani_L_sita3]=mani_status[mani_sita3];
+	
+	
 }
 	   
 void set_pidp(PID_parameter *hpidp,int KP, int KI ,int KD){
@@ -710,12 +870,18 @@ void set_pidp(PID_parameter *hpidp,int KP, int KI ,int KD){
     hpidp->kd=KD;
 		  }
 
-void pid_protect(PID_parameter *hpidp,PID_variables *hpidv){
-			
-	if(hpidv->target<=80&&hpidv->target>=-80)   {hpidp->kp=10;hpidp->ki=0.1;hpidp->kd=0.1;}
+void pid_autoset(PID_parameter *hpidp,PID_variables *hpidv){
+	
+	if(ABS(hpidv->target)>300)                                  {hpidp->kp=40;hpidp->ki=0.1  ;hpidp->kd=5  ;}
+	if(ABS(hpidv->target)>240&&ABS(hpidv->target)<=300)         {hpidp->kp=30;hpidp->ki=0.09 ;hpidp->kd=4  ;}
+	if(ABS(hpidv->target)>180&&ABS(hpidv->target)<=240)         {hpidp->kp=20;hpidp->ki=0.08 ;hpidp->kd=3  ;}
+	if(ABS(hpidv->target)>120&&ABS(hpidv->target)<=180)         {hpidp->kp=10;hpidp->ki=0.06 ;hpidp->kd=2  ;}
+	if(ABS(hpidv->target)>80&&ABS(hpidv->target)<=120)          {hpidp->kp=8 ;hpidp->ki=0.03 ;hpidp->kd=1  ;}
+	if(ABS(hpidv->target)>40&&ABS(hpidv->target)<=80)           {hpidp->kp=5 ;hpidp->ki=0.005;hpidp->kd=0.5;}
+	if(hpidv->target<=40&&hpidv->target>=-40)                   {hpidp->kp=2 ;hpidp->ki=0.001;hpidp->kd=0.2;}
 	
 }	
-int abs(int a){
+int ABS(int a){
 	
 	if(a>0){return a;}
 	else{return -a;}
@@ -727,6 +893,19 @@ int nominus(int a){
 	if(a>0){return a;}
 	else {return 0;}
 
+}
+void delay_us(uint32_t nus)
+{
+  uint32_t temp;
+  SysTick->LOAD = HAL_RCC_GetHCLKFreq()/1000000/8*nus;
+  SysTick->VAL=0X00;//清空计数器
+  SysTick->CTRL=0X01;//使能，减到零是无动作，采用外部时钟源
+  do
+  {
+    temp=SysTick->CTRL;//读取当前倒计数值
+  }while((temp&0x01)&&(!(temp&(1<<16))));//等待时间到达
+  SysTick->CTRL=0x00; //关闭计数器
+  SysTick->VAL =0X00; //清空计数器
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------

@@ -19,7 +19,7 @@ const unsigned char INIT_ADDR5[5]= {0x06,0x3A,0x01,0x01,0x01};
 #define debug_out(fmt,args...)  printf(fmt,##args)
 //#define debug_out(fmt,args...) 
 
-void delay_us(uint32_t n)
+void DELAY_US(uint32_t n)
 {
 	unsigned char i;
 
@@ -36,7 +36,7 @@ void NRF24L01_Init(void)
 	//gpio init
 	Clr_NRF24L01_CE;    // peripheral chip enable
 	Set_NRF24L01_CSN;   // Spi disable
-	delay_us(100);
+	DELAY_US(100);
 }
 
 //封装spi读写函数
@@ -136,7 +136,7 @@ unsigned char NRF24L01_RxPacket(unsigned char *rxbuf)
 	}
 	if(state&RX_OK)                                 //接收到数据
 	{
-		HAL_Delay(5);
+//		HAL_Delay(5);
 		NRF24L01_Read_Buf(RD_RX_PLOAD,rxbuf,RX_PLOAD_WIDTH);//读取数据
 		NRF24L01_Write_Reg(FLUSH_RX,0xff);          //清除RX FIFO寄存器
 		

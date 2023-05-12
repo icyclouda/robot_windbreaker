@@ -55,13 +55,16 @@ typedef struct
 typedef enum
 {
 	L_F = 0,
-	L_B = 1,
-	R_F = 2,
-	R_B = 3,
-	M_X = 4,
-	M_Y = 5,
-	M_K = 6,
-	M_A = 7,
+	L_B ,
+	R_F ,
+	R_B ,
+	M_X ,
+	M_Y ,
+	M_K ,
+	M_A , 
+	M_S1,
+	M_S2,
+	M_S3,
 	arspace
 }pwm_output_TypeDef;
 
@@ -224,6 +227,8 @@ void Error_Handler(void);
 #define speed_param 5  //1500/signal_per_round 
 #define l1 235
 #define l2 215
+#define P  0.5
+#define Q  0.5
 
 #define error_m1            error_status[m1_fault]=1
 #define if_m1_error        	error_status[m1_fault]==1

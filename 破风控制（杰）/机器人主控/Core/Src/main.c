@@ -100,6 +100,7 @@ int m_reset_flag = 0;
 //int m_error_flag = 0;
 
 float a=0;
+
 int w=0;//错误急停判断debug标志位
 //-------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------USER-----CODE---END-----PRIVATE------VARIABLES--------------------------------------
@@ -188,7 +189,7 @@ int main(void)
 	OLED_show_string(3, 13, "WIND");
 	OLED_show_string(4, 13, "BREAKERS");
 	OLED_refresh_gram();
-	OLED_DrawBMP(0, 0,63, 7,gImage_windbreaker);
+	OLED_DrawBMP(0, 0,63, 7,gImage_windbreaker);//破风的logo
 	HAL_Delay(1000);
 	
    
@@ -196,7 +197,7 @@ int main(void)
 //	printf("\r\ninit OK!\r\n");
 //	temp = 4;
 	while(NRF24L01_Check()){
-		OLED_show_string(2, 0, "NRF24L01_test_fail");
+		OLED_show_string(2, 0, "NRF24L01_test_fail");//无线通讯模块自检，并用oled显示
 	}
 	OLED_operate_gram(PEN_CLEAR);
 	OLED_refresh_gram();
@@ -253,29 +254,30 @@ int main(void)
 	  //-------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------USER-----CODE------BEGIN---WHILE----------------------------------
 //--------------------------------------------------------------------------------------------------------------------------
-	  	if(NRF24L01_RxPacket(controller_signal)==0){
+	  	if(NRF24L01_RxPacket(controller_signal)==0){//提取信号
 		data_L_X=controller_signal[DATA_L_X];
 	    data_L_Y=controller_signal[DATA_L_Y];
 		data_R_X=controller_signal[DATA_R_X];
 	    data_R_Y=controller_signal[DATA_R_Y];
 		}
-		else{
+		else{//没有收到信号时要输出0
 			data_L_X=24;
 			data_L_Y=24;
 			data_R_X=24;
 			data_R_Y=25;
 			
 		}
-		if(controller_signal[MODE]==MOVI){
-			OLED_printf(0,0,"dLX=%d-dLY=%d",data_L_X,data_L_Y);
-			OLED_printf(1,0,"dRX=%d-dRY=%d",data_R_X,data_R_Y);
-			OLED_printf(2,0,"LFS=%d-RFS=%d",motor_speed[L_F],motor_speed[R_F]);
-			OLED_printf(3,0,"LBS=%d-RBS=%d",motor_speed[L_B],motor_speed[R_B]);
+		if(controller_signal[MODE]==MOVI){//运动模式下的显示
+			OLED_printf(0,1,"dLX=%d-dLY=%d",data_L_X,data_L_Y);
+			OLED_printf(1,1,"dRX=%d-dRY=%d",data_R_X,data_R_Y);
+			OLED_printf(2,1,"LFS=%d-RFS=%d",motor_speed[L_F],motor_speed[R_F]);
+			OLED_printf(3,1,"LBS=%d-RBS=%d",motor_speed[L_B],motor_speed[R_B]);
 			
   }
-		else if(controller_signal[MODE]==MANI){
+//		oled最后都注释一下
+		else if(controller_signal[MODE]==MANI){//机械臂模式下的显示
 			
-			OLED_printf(0,1,"xp=%d-xm=%d-w=%d",error_status[xp_fault],error_status[xm_fault],w);
+			OLED_printf(0,1,"p=%u",(uint16_t)(mani_status[mani_sita1]*2000/3.141593+500));
 			OLED_printf(1,1,"dx:%lf-dy:%lf",mani_status[mani_dx_target],mani_status[mani_dy_target]);
 			if(error_status[m1_fault]==1)           {OLED_printf(2,0,"error_m1=%lf", mani_status[mani_m1]);}
 			else if(error_status[m2_fault]==1)      {OLED_printf(2,0,"error_m2=%lf", mani_status[mani_m2]);}
@@ -353,24 +355,24 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (htim == (&htim6))
     {
 		if(controller_signal[MODE]==MOVI){//------------------------------------------moving
-			m_reset_flag=0;
+			m_reset_flag=0;//机械臂模式初始化标志复位
 			no_fault_happended//机械臂模式的清除错误标记
-			if(controller_signal[OPTION]==2){
-				motor_rotate_speed=340;
+			if(controller_signal[OPTION]==2){//速度选择
+				motor_rotate_speed=350;
 //				set_pidp(&drive_pidp_LF,50,0.2 ,5);
 //				set_pidp(&drive_pidp_LB,50,0.2 ,5);
 //				set_pidp(&drive_pidp_RF,50,0.2 ,5);
 //				set_pidp(&drive_pidp_RB,50,0.2 ,5);
 			}
 			else if (controller_signal[OPTION]==1){
-				motor_rotate_speed=180;
+				motor_rotate_speed=200;
 //				set_pidp(&drive_pidp_LF,20,0.1 ,1);
 //				set_pidp(&drive_pidp_LB,20,0.1 ,1);
 //				set_pidp(&drive_pidp_RF,20,0.1 ,1);
 //				set_pidp(&drive_pidp_RB,20,0.1 ,1);
 			}
 			else if(controller_signal[OPTION]==0){
-				motor_rotate_speed=80;
+				motor_rotate_speed=100;
 //				set_pidp(&drive_pidp_LF,10,0.001 ,0.1);
 //				set_pidp(&drive_pidp_LB,10,0.001 ,0.1);
 //				set_pidp(&drive_pidp_RF,10,0.001 ,0.1);
@@ -380,14 +382,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				motor_rotate_speed=0;
 			}
 			target_cal=motor_rotate_speed/25;
-			
-			target[L_F]=target_cal*((int)data_L_X-25)+target_cal*((int)data_R_Y-25)/2;
-			target[L_B]=target_cal*((int)data_L_Y-23)+target_cal*((int)data_R_Y-25)/2;
-			target[R_F]=target_cal*((int)data_L_Y-23)-target_cal*((int)data_R_Y-25)/2;
-			target[R_B]=target_cal*((int)data_L_X-25)-target_cal*((int)data_R_Y-25)/2;
+			//---------------------------------------------------------麦轮运动解算
+			target[L_F]=target_cal*((int)data_L_X-24)+target_cal*((int)data_R_Y-25)/2;
+			target[L_B]=target_cal*((int)data_L_Y-24)+target_cal*((int)data_R_Y-25)/2;
+			target[R_F]=target_cal*((int)data_L_Y-24)-target_cal*((int)data_R_Y-25)/2;
+			target[R_B]=target_cal*((int)data_L_X-24)-target_cal*((int)data_R_Y-25)/2;
 
-			get_speed(motor_speed);
+			get_speed(motor_speed);//获取速度并放入数组
 			
+//-----------------------------------------------------------
+			//------------------------pid计算
 			input_pidv(&drive_pidv_L_F,(int)target[L_F],(int)motor_speed[L_F]);
 			pid_autoset(&drive_pidp_LF,&drive_pidv_L_F);
 			pwm_output[L_F]= pwm_limit(pid_cal(&drive_pidp_LF,&drive_pidv_L_F)); //LF
@@ -411,17 +415,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			pwm_output[R_B]=pwm_limit(pid_cal(&drive_pidp_RB,&drive_pidv_R_B)); //RB
 			drive_pidv_R_B.data_before=drive_pidv_R_B.data_now;
 			drive_pidv_R_B.last_target=drive_pidv_R_B.target;
+//------------------------------------------------------------------------------------------
+			PWM_output(pwm_output);//输出
 			
-			PWM_output(pwm_output);
-			UART_SendData4(motor_speed[R_F],motor_speed[L_B],drive_pidp_RB.kp,drive_pidp_RB.kp);
+			
+			UART_SendData4(motor_speed[L_F],motor_speed[L_B],motor_speed[R_F],motor_speed[R_B]);//串口发送
 			
 		}
-		else if(controller_signal[MODE]==MANI){//-------------------------------------------------manipulator
+		else if(controller_signal[MODE]==MANI){//-------------------------manipulator
 				temp_X=4*((int)data_L_X-24);
 				temp_Y=4*((int)data_L_Y-24);
-				temp_A=4*((int)data_R_X-25);
-				temp_K=4*((int)data_R_Y-23);
-				if(m_reset_flag ==0){
+				temp_A=4*((int)data_R_X-23);
+				temp_K=4*((int)data_R_Y-25);
+				if(m_reset_flag ==0){//位置的初始化
 					target[M_X]=200;
 					target[M_Y]=100;
 					target[M_A]=0  ;
@@ -429,25 +435,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				mani_status[mani_L_X]=0;
 				mani_status[mani_L_Y]=0;
 				mani_status[mani_L_A]=0;
-					m_reset_flag=1;
+					m_reset_flag=1;//标志上拉
 				}
+				//-----------摇杆控制增减力度------
 				//--------------------------------------------------x
 				
-				if(temp_X>90)                   {target[M_X]+=2  ;x_last_plus;}
-				else if(temp_X<=90&&temp_X>50)  {target[M_X]+=1  ;x_last_plus;}
+				if(temp_X>90)                   {target[M_X]+=1  ;x_last_plus;}//记录行为
+				else if(temp_X<=90&&temp_X>50)  {target[M_X]+=0.8  ;x_last_plus;}
 				else if(temp_X<=50&&temp_X>10)  {target[M_X]+=0.5;x_last_plus;}
 				else if(temp_X<-10&&temp_X>=-50){target[M_X]-=0.5;x_last_minus;}
-				else if(temp_X<-50&&temp_X>=90) {target[M_X]-=1  ;x_last_minus;}
-				else if(temp_X<-90)             {target[M_X]-=2  ;x_last_minus;}
-          
+				else if(temp_X<-50&&temp_X>=90) {target[M_X]-=0.8 ;x_last_minus;}
+				else if(temp_X<-90)             {target[M_X]-=1  ;x_last_minus;}
+					
 				//---------------------------------------------------y
 				
-				if(temp_Y>90)                   {target[M_Y]+=2  ;y_last_plus;}
-				else if(temp_Y<=90&&temp_Y>50)  {target[M_Y]+=1  ;y_last_plus;}
+				if(temp_Y>90)                   {target[M_Y]+=1  ;y_last_plus;}
+				else if(temp_Y<=90&&temp_Y>50)  {target[M_Y]+=0.8  ;y_last_plus;}
 				else if(temp_Y<=50&&temp_Y>10)  {target[M_Y]+=0.5;y_last_plus;}
 				else if(temp_Y<-10&&temp_Y>=-50){target[M_Y]-=0.5;y_last_minus;}
-				else if(temp_Y<-50&&temp_Y>=90) {target[M_Y]-=1  ;y_last_minus;}
-				else if(temp_Y<-90)				{target[M_Y]-=2  ;y_last_minus;}
+				else if(temp_Y<-50&&temp_Y>=90) {target[M_Y]-=0.8  ;y_last_minus;}
+				else if(temp_Y<-90)				{target[M_Y]-=1  ;y_last_minus;}
 
 				//---------------------------------------------------k
 				
@@ -469,19 +476,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				else if(temp_A<-90)             {target[M_A]-=0.8;a_last_minus;}//0-180
 				
 				//---------------------------------------------------------
-				//---------------------------------------------	//限制&错误急停
-				
-					if((if_error_x_plus && if_x_plus)||(if_error_x_minus && if_x_minus))
-						{target[M_X]=mani_status[mani_L_X];w++;}
-					if((if_error_y_plus && if_y_plus)||(if_error_y_minus && if_y_minus))
-						{target[M_Y]=mani_status[mani_L_Y];}
-					if((if_error_a_plus && if_a_plus)||(if_error_a_minus && if_a_minus))
-						{target[M_A]=mani_status[mani_L_A];}
-				//------------------------判断错误原因与动作并 节源
+				//---------------------------------------------	//限制&错误急停(判断错误原因与动作并 节源)
+					if(target[M_Y]<=0){target[M_Y]=0;}
+					
+//					if((if_error_x_plus && if_x_plus)||(if_error_x_minus && if_x_minus)||target[M_Y]<=0)
+//						{target[M_X]=mani_status[mani_L_X];w++;}
+//						
+//					if((if_error_y_plus && if_y_plus)||(if_error_y_minus && if_y_minus))
+//						{target[M_Y]=mani_status[mani_L_Y];}
+//						
+//					if((if_error_a_plus && if_a_plus)||(if_error_a_minus && if_a_minus))
+//						{target[M_A]=mani_status[mani_L_A];}
+				//------------------------
 				//----------------------------------------------------------	
 				mani_status[mani_L_X]=target[M_X];
 				mani_status[mani_L_Y]=target[M_Y];
-				mani_status[mani_L_A]=target[M_A];
+				mani_status[mani_L_A]=target[M_A];//记录上一次的信号
 					
 //				if(controller_signal[OPTION]==1&&o_limit[0]){//prot数组标记
 //				target[M_X]=200 ;
@@ -558,13 +568,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				target[M_Y]=100 ;
 				target[M_A]=0   ;
 				mani_lock_flag=1022;
-				no_fault_happended
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
+				no_fault_happended//清除错误状态标记
 				}
-				else if(controller_signal[OPTION]==2&&(mani_lock_flag&2)){//up
+				else if(controller_signal[OPTION]==2&&(mani_lock_flag&2)){//prot
 				target[M_X]=300;
 				target[M_Y]=300;
 				target[M_A]=90 ;
 				mani_lock_flag=1021;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended
 				}
 				else if(controller_signal[OPTION]==3&&(mani_lock_flag&4)){//mid
@@ -572,6 +588,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				target[M_Y]=150;
 				target[M_A]=0;
 				mani_lock_flag=1019;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended
 				}
 				else if(controller_signal[OPTION]==4&&(mani_lock_flag&8)){//down
@@ -579,6 +598,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				target[M_Y]=100;
 				target[M_A]=0;
 				mani_lock_flag=1015;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended
 				}
 				else if(controller_signal[OPTION]==5&&(mani_lock_flag&16)){//tou
@@ -586,44 +608,62 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				target[M_Y]=100;
 				target[M_A]=0;
 				mani_lock_flag=1007;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended
 				}
 				else if(controller_signal[OPTION]==6&&(mani_lock_flag&32)){//collect
 				mani_lock_flag=991;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended
 				}
-				else if(controller_signal[OPTION]==7&&(mani_lock_flag&64)){
+				else if(controller_signal[OPTION]==7&&(mani_lock_flag&64)){//
 				target[M_X]=200;
 				target[M_Y]=100;
 				target[M_A]=0;
 				mani_lock_flag=959;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended
 				}
-				else if(controller_signal[OPTION]==8&&(mani_lock_flag&128)){
+				else if(controller_signal[OPTION]==8&&(mani_lock_flag&128)){//
 				target[M_X]=200;
 				target[M_Y]=100;
 				target[M_A]=0;
 				mani_lock_flag=895;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended	
 				}
-				else if(controller_signal[OPTION]==9&&(mani_lock_flag&256)){
+				else if(controller_signal[OPTION]==9&&(mani_lock_flag&256)){//
 				target[M_X]=200;
 				target[M_Y]=100;
 				target[M_A]=0;
 				mani_lock_flag=767;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended	
 				}
-				else if(controller_signal[OPTION]==10&&(mani_lock_flag&512)){
+				else if(controller_signal[OPTION]==10&&(mani_lock_flag&512)){//
 				target[M_X]=200;
 				target[M_Y]=200;
 				target[M_A]=0;
 				mani_lock_flag=511;
+				mani_status[mani_L_X]=target[M_X];
+				mani_status[mani_L_Y]=target[M_Y];
+				mani_status[mani_L_A]=target[M_A];
 				no_fault_happended	
 				}
 				//-----------------------------------------------------------
 	//			target[M_X]=200;
 	//				
-	//			target[M_Y]=200;
+	//			target[M_Y]=200;//test
 	//			
 	//			target[M_A]=-90;
 				mani_cul(target[M_X],target[M_Y],target[M_A]);
@@ -654,12 +694,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				drive_pidv_R_B.last_target=drive_pidv_R_B.target;
 				
 				PWM_output(pwm_output);
+				//-------------------------一个简单的低通滤波
+				pwm_output[M_S1]=(uint16_t)((P*mani_status[mani_sita1]+Q*mani_status[mani_L_sita1])*2000/3.141593+500);
+				pwm_output[M_S2]=(uint16_t)((P*mani_status[mani_sita2]+Q*mani_status[mani_L_sita2])*2000/3.141593+500);
+				pwm_output[M_S3]=(uint16_t)((P*mani_status[mani_sita3]+Q*mani_status[mani_L_sita3])*2000/3.141593+500);
+				
+//				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,pwm_output[M_S1]);
+//				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,pwm_output[M_S2]);
+//				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,pwm_output[M_S3]);
 				
 				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,(uint16_t)(mani_status[mani_sita1]*2000/3.141593+500));
 				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,(uint16_t)(mani_status[mani_sita2]*2000/3.141593+500));
 				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,(uint16_t)(mani_status[mani_sita3]*2000/3.141593+500));
 				//(uint16_t)(mani_status[mani_sita1]*2000/3.141593+500)
 //				mani_prescaler=0;
+				mani_status[mani_L_sita1]=mani_status[mani_sita1];
+				mani_status[mani_L_sita2]=mani_status[mani_sita2];
+				mani_status[mani_L_sita3]=mani_status[mani_sita3];
 
 		}
 		
@@ -738,7 +789,7 @@ void PWM_output(int *pwm ){
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4,(uint16_t)(ABS(pwm[R_B])));
 
 }
-int pwm_limit(int pwm){
+int pwm_limit(int pwm){//pwm限制
 	
 	if(pwm>999)return 999;
 	else if(pwm<-999)return -999;
@@ -760,7 +811,7 @@ void get_speed(short *rotate_speed){
 	
 }
 
-void input_pidv(PID_variables *hpidv,int Target,int Data_now){
+void input_pidv(PID_variables *hpidv,int Target,int Data_now){//pid变量输入
 	
 	if(Target>motor_rotate_speed){
 		hpidv->target=motor_rotate_speed;
@@ -787,7 +838,7 @@ int pid_cal(PID_parameter *hpidp,PID_variables *hpidv){//-----------------------
 	return pwm_control;
     }
 
-void mani_cul(double x,double y,double sita){
+void mani_cul(double x,double y,double sita){//运动学解算部分
 
     mani_status[mani_m1]=-(l2*l2-l1*l1-x*x-y*y)/(2*l1*sqrt(x*x+y*y));
     if(mani_status[mani_m1]>1||mani_status[mani_m1]<-1){
@@ -795,7 +846,7 @@ void mani_cul(double x,double y,double sita){
 		if(if_x_plus)      {error_x_plus;}
 		else if(if_x_minus){error_x_minus;}
 		if(if_y_plus)      {error_y_plus;}
-		else if(if_y_minus){error_y_minus;}
+		else if(if_y_minus){error_y_minus;}//返回错误信号和错误的状态和原因
     }
     else{
 		if(y==0){mani_status[mani_v]=1.570796;}
@@ -813,7 +864,7 @@ void mani_cul(double x,double y,double sita){
         if(mani_status[mani_m2]>1||mani_status[mani_m2]<-1){
 			error_m2;
 			if(if_x_plus)      {error_x_plus;}
-			else if(if_x_minus){error_x_minus;}
+			else if(if_x_minus){error_x_minus;}//同
 			if(if_y_plus)      {error_y_plus;}
 			else if(if_y_minus){error_y_minus;}
         }
@@ -857,9 +908,7 @@ void mani_cul(double x,double y,double sita){
     }
 	
 	//------------------------------------------------------------------
-	mani_status[mani_L_sita1]=mani_status[mani_sita1];
-	mani_status[mani_L_sita2]=mani_status[mani_sita2];
-	mani_status[mani_L_sita3]=mani_status[mani_sita3];
+	
 	
 	
 }
@@ -871,30 +920,30 @@ void set_pidp(PID_parameter *hpidp,int KP, int KI ,int KD){
 		  }
 
 void pid_autoset(PID_parameter *hpidp,PID_variables *hpidv){
-	
-	if(ABS(hpidv->target)>300)                                  {hpidp->kp=40;hpidp->ki=0.1  ;hpidp->kd=5  ;}
-	if(ABS(hpidv->target)>240&&ABS(hpidv->target)<=300)         {hpidp->kp=30;hpidp->ki=0.09 ;hpidp->kd=4  ;}
-	if(ABS(hpidv->target)>180&&ABS(hpidv->target)<=240)         {hpidp->kp=20;hpidp->ki=0.08 ;hpidp->kd=3  ;}
-	if(ABS(hpidv->target)>120&&ABS(hpidv->target)<=180)         {hpidp->kp=10;hpidp->ki=0.06 ;hpidp->kd=2  ;}
-	if(ABS(hpidv->target)>80&&ABS(hpidv->target)<=120)          {hpidp->kp=8 ;hpidp->ki=0.03 ;hpidp->kd=1  ;}
-	if(ABS(hpidv->target)>40&&ABS(hpidv->target)<=80)           {hpidp->kp=5 ;hpidp->ki=0.005;hpidp->kd=0.5;}
-	if(hpidv->target<=40&&hpidv->target>=-40)                   {hpidp->kp=2 ;hpidp->ki=0.001;hpidp->kd=0.2;}
+	hpidp->kp=20;hpidp->ki=0  ;hpidp->kd=0 ;
+//	if(ABS(hpidv->target)>300)                                  {hpidp->kp=30;hpidp->ki=0.1  ;hpidp->kd=4  ;}
+//	if(ABS(hpidv->target)>240&&ABS(hpidv->target)<=300)         {hpidp->kp=30;hpidp->ki=0.09 ;hpidp->kd=4  ;}
+//	if(ABS(hpidv->target)>180&&ABS(hpidv->target)<=240)         {hpidp->kp=20;hpidp->ki=0.08 ;hpidp->kd=3  ;}
+//	if(ABS(hpidv->target)>120&&ABS(hpidv->target)<=180)         {hpidp->kp=10;hpidp->ki=0.06 ;hpidp->kd=2  ;}
+//	if(ABS(hpidv->target)>80&&ABS(hpidv->target)<=120)          {hpidp->kp=8 ;hpidp->ki=0.03 ;hpidp->kd=1  ;}
+//	if(ABS(hpidv->target)>40&&ABS(hpidv->target)<=80)           {hpidp->kp=5 ;hpidp->ki=0.005;hpidp->kd=0.5;}
+//	if(hpidv->target<=40&&hpidv->target>=-40)                   {hpidp->kp=2 ;hpidp->ki=0.001;hpidp->kd=0.2;}
 	
 }	
-int ABS(int a){
+int ABS(int a){//绝对值
 	
 	if(a>0){return a;}
 	else{return -a;}
 	
 }
 
-int nominus(int a){
+int nominus(int a){//非负，应该已经用不上了
 	
 	if(a>0){return a;}
 	else {return 0;}
 
 }
-void delay_us(uint32_t nus)
+void delay_us(uint32_t nus)//毫秒延迟
 {
   uint32_t temp;
   SysTick->LOAD = HAL_RCC_GetHCLKFreq()/1000000/8*nus;

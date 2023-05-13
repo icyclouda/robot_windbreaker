@@ -74,6 +74,9 @@ void Error_Handler(void);
 #define IRQ_nrf24l01_GPIO_Port GPIOB
 #define CSN_nrf24l01_Pin GPIO_PIN_1
 #define CSN_nrf24l01_GPIO_Port GPIOB
+#define _LIFT_Pin GPIO_PIN_2
+#define _LIFT_GPIO_Port GPIOB
+#define _LIFT_EXTI_IRQn EXTI2_IRQn
 #define CE_nrf24l01_Pin GPIO_PIN_10
 #define CE_nrf24l01_GPIO_Port GPIOB
 #define key0_Pin GPIO_PIN_12

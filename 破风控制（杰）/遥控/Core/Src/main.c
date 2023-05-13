@@ -45,10 +45,12 @@ typedef enum
 	SYMBOL    = 0,
 	MODE      = 1,
 	OPTION    = 2,
-	DATA_L_X1 = 3,
-	DATA_L_Y1 = 4,
-	DATA_L_X2 = 5,
-	DATA_L_Y2 = 6,
+	DATA_L_X = 3,
+	DATA_L_Y = 4,
+	DATA_R_X = 5,
+	DATA_R_Y = 6,
+	JAW      = 7,
+	LIFT     = 8,
 	signal_array_Space = 32
 }signal_TypeDef;
 
@@ -76,8 +78,9 @@ unsigned char data_y1_average=0;
 unsigned char data_x2_average=0;
 unsigned char data_y2_average=0;
 int mode=2,mode0,mode1,mode2,mode3,mode4;
-int	option=2,option0,option1,option2,option3,option4;
-int gate=0;
+int	option=2,option0,option1,option2,option3,option4,option5,option6,option7,option8,option9,option10;
+int gate=0,jaw=0,lift=0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -171,13 +174,16 @@ int main(void)
 	if(gate){OLED_show_string(0, 1, "R");}
 	else    {OLED_show_string(0, 1, "F");}
 	
+	if(tmp_buf[JAW]){OLED_show_string(0, 14, "I");}
+	else    {OLED_show_string(0, 18, "V");}
+	
 	
 	OLED_show_string(2,1, ">");
 	OLED_show_string(2,8, "---->");
 	OLED_printf(0, 9,"m=%d",mode);
 	OLED_printf(1, 9,"o=%d",option);
-	OLED_printf(3, 9,"x=%d",tmp_buf[DATA_L_X1]);
-	OLED_printf(4, 9,"y=%d",tmp_buf[DATA_L_Y1]);
+	OLED_printf(3, 9,"x=%d",tmp_buf[DATA_L_X]);
+	OLED_printf(4, 9,"y=%d",tmp_buf[DATA_L_Y]);
 	  
 	if(mode>2){mode=2;}
 	if(mode<0){mode=0;}
@@ -192,7 +198,7 @@ int main(void)
 
 
 
-	if(mode==2){               //---------------------moving
+	if(mode==2){   	            //---------------------moving
 		if(option>2){option=2;}
 		if(option<0){option=0;}
 		option0=option;
@@ -213,14 +219,53 @@ int main(void)
 		OLED_show_string(option2,14, "TIY");//o=0
 	}
 	else if(mode==0){
-		if(option>2){option=2;}
-		if(option<0){option=0;}
-		option0=option;
-		OLED_show_string(option0,14, "UP");//o=2
-		option1=option+1;
-		OLED_show_string(option1,14, "MID");//o=1
-		option2=option+2;
-		OLED_show_string(option2,14, "DOW");//o=0
+		
+	  if(option<=2){option+=10;}
+	  if(option>=11){option-=10;}
+	  
+	  option1=option;
+	  if(option1>4){option1-=10;}
+	  OLED_show_string(option1,14, "prot");//2
+	  
+	  option2=option+1;
+	  if(option2>4){option2-=10;}
+	  OLED_show_string(option2,14, "up");//1
+	  
+	  option3=option+2;
+	  if(option3>4){option3-=10;}
+	  OLED_show_string(option3,14, "plac");//10
+		
+	  option4=option+3;
+	  if(option4>4){option4-=10;}
+	  OLED_show_string(option4,14, "down");//9
+	  
+	  option5=option+4;
+	  if(option5>4){option5-=10;}
+	  OLED_show_string(option5,14, "plac");//8
+	  
+	  option6=option+5;
+	  if(option6>4){option6-=10;}
+	  OLED_show_string(option6,14, "free");/7
+	
+		option7=option+6;
+	  if(option7>4){option7-=10;}
+	  OLED_show_string(option7,14, "mid");//6
+		
+	  option8=option+7;
+	  if(option8>4){option8-=10;}
+	  OLED_show_string(option8,14, "plac");//5
+	  
+	  option9=option+8;
+	  if(option9>4){option9-=10;}
+	  OLED_show_string(option9,14, "tou");//4
+	  
+	  option10=option+9;
+	  if(option10>4){option10-=10;}
+	  OLED_show_string(option10,14, "plac");//3
+	
+	
+	
+	
 	}
 	
 	
@@ -331,7 +376,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 			}	
 		}	
 	}
+	if(GPIO_Pin == _Z_Pin){
+		if(HAL_GPIO_ReadPin(_Z_GPIO_Port,_Z_Pin)==GPIO_PIN_RESET){
+			if(jaw==0){tmp_buf[JAW]=0;jaw=1;}
+			else     {tmp_buf[JAW]=1;jaw=0;}
+		
+		
+		}
+	}
+	if(GPIO_Pin == _LIFT_Pin){
+		if(HAL_GPIO_ReadPin(_LIFT_GPIO_Port,_LIFT_Pin) == GPIO_PIN_RESET ){
+			if(lift==0){tmp_buf[LIFT]=0;lift=1;}
+			else       {tmp_buf[LIFT]=1;lift=0;}
+		}
+	}
 }
+	
 
 
 
@@ -340,7 +400,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	HAL_ADC_Stop_DMA(&hadc1);
 	
 	for(unsigned char i=0;i<20;i+=4){
-	data_y1_average+=(signal[i]&0xfff)/80;
+	data_y1_average+=(signal[i  ]&0xfff)/80;
 	data_x1_average+=(signal[i+1]&0xfff)/80;
 	data_x2_average+=(signal[i+2]&0xfff)/80;
 	data_y2_average+=(signal[i+3]&0xfff)/80;
@@ -362,10 +422,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	tmp_buf[SYMBOL]   = differences    ;//Òì»¯
 	tmp_buf[MODE]     = mode           ;
 	tmp_buf[OPTION]   = option         ;
-	tmp_buf[DATA_L_X1]= data_x1_average;
-	tmp_buf[DATA_L_Y1]= data_y1_average;
-	tmp_buf[DATA_L_X2]= data_x2_average;
-	tmp_buf[DATA_L_Y2]= data_y2_average;
+	tmp_buf[JAW]    =    jaw         ;
+	tmp_buf[DATA_L_X]= data_x1_average;
+	tmp_buf[DATA_L_Y]= data_y1_average;
+	tmp_buf[DATA_R_X]= data_x2_average;
+	tmp_buf[DATA_R_Y]= data_y2_average;
 	NRF24L01_TxPacket(tmp_buf);
 	
 	

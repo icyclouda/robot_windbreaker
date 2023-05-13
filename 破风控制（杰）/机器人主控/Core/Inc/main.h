@@ -225,8 +225,8 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 #define signal_per_round   330 //一圈多少个信号
 #define speed_param 5  //1500/signal_per_round 
-#define l1 235
-#define l2 215
+#define l1 308
+#define l2 235
 #define P  0.5
 #define Q  0.5
 

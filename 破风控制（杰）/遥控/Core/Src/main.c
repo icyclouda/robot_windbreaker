@@ -139,7 +139,7 @@ int main(void)
 	OLED_show_string(1, 13, "WIND");
 	OLED_show_string(3, 13, "BREAKERS");
 	OLED_refresh_gram();
-	OLED_DrawBMP(0, 0,63, 7,gImage_windbreaker);
+	OLED_DrawBMP(0, 0,63, 7,gImage_windbreaker);//破风的logo
 	HAL_Delay(2000);
 
   
@@ -195,7 +195,7 @@ int main(void)
 	OLED_show_string(mode1,3, "ADJU");
 	mode2=mode+2;
 	OLED_show_string(mode2,3, "MANI");
-
+//---------------------------菜单的显示
 
 
 	if(mode==2){   	            //---------------------moving
@@ -339,8 +339,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	
 	if(GPIO_Pin == key1_Pin){
-		if(HAL_GPIO_ReadPin(key1_GPIO_Port,key1_Pin)==GPIO_PIN_RESET){
-			mode--;
+		if(HAL_GPIO_ReadPin(key1_GPIO_Port,key1_Pin)==GPIO_PIN_RESET){//使用薄弱的if来防抖
+			mode--;//遥控菜单的选择
 			option=2;
 			HAL_ADC_Stop_DMA(&hadc1);
 			gate=0;}
@@ -411,7 +411,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	data_x1_average = data_x1_average/5;
 	data_y1_average = data_y1_average/5;
 	data_x2_average = data_x2_average/5;
-	data_y2_average = data_y2_average/5;
+	data_y2_average = data_y2_average/5;//均值滤波
 	
 	
 	
